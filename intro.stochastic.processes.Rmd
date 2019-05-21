@@ -1,0 +1,50 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+# Stochastic Processes
+
+## Introduction
+
+Up to now when we had a sequence of random variables X~1~, X~2~, .. we assumed them to be independent. we have gone about as far as one can with this assumption. So from now on we will consider situations were the rv's are dependent.
+
+There is exactly one way in which a collection of rv's can be independent, but there are infinitely many ways in which they can depend on one another. In order to make any progress we then need to say something about the dependence structure.
+
+**Definition**
+
+Any collection of random vectors $\{\mathbf{X_t}, t \in T\}$ is called a *stochastic process*. All the values that the random variables X~t~  can take on are called the *state space*. Because X~t~  is a regular random variable (or vector) we again differentiate between continuous and discrete state space cases. Moreover T can be discrete (1,2,..) or continuous (t>0) as well. 
+
+#### **Example** 
+
+Let $X_i  \sim U[0,1], i=1,2,..; X_i  \perp X_j$ , then \{X~i~, i=1,2,..\} is a continuous state space discrete time process. 
+
+#### **Example** 
+
+Let $X_i \in \{0,..,39\}$ the position on the board of your token after i roles of the dice in a game of Monopoly. Then $\{X_i, i=1,2,..\}$ is a discrete state space discrete time process. 
+
+#### **Example** 
+
+Let $P(Z_i =-1)=p=1-P(Z_i =1), Z_i \perp Z_j$  if $i \ne j$. Let 
+
+$X_n=\sum_{i=1}^n Z_i$
+
+then $X_n \in \{0, \pm 1, \pm 2,..\}$ and so $\{X_n , n=1,2,..\}$ is a discrete state space discrete time process. This is a very famous stochastic process called a *random walk.*
+
+Here is a list of things we often want to know about a stochastic process:
+-  what is the distribution of X~n~, especially in the limit?  
+-  what is EX~n~, especially in the limit?  
+-  what is cor(X~n, X~n+k~)?  
+-  Do certain events ever occur, and if so with what probability? For example in the random walk, if we start at 0 what is the probability to reach 100? 
+ 

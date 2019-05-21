@@ -1,0 +1,192 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+## Continuous Distributions
+
+### Uniform Distribution
+
+X is said to have a uniform distribution on the interval [A,B] if
+
+![](graphs/cont1.png)
+
+### Exponential Distribution
+
+X is said to have an exponential distribution rate $\lambda$ if 
+
+$f(x) =  \lambda e^{-\lambda x}, x>0,  \lambda >0$
+
+we write $X  \sim  Exp( \lambda )$ 
+
+Note
+
+![](graphs/cont2.png)
+The "trick" we used here, namely showing a result for a special case ($\lambda =1$) and then doing the general case, is often a good idea! Let's use it again to find the moment generating function:
+
+![](graphs/cont25.png)
+
+`r hl()$hr()`
+
+We have previously talked about the memoryless property, and the fact that among discrete distributions on $\mathbb{N}$ it is unique to the geometric rv. Now we have  
+
+**Theorem**
+
+X has an exponential distribution iff X is a positive continuous r.v. and 
+
+$P(X>s+t | X>s) = P(X>t) for all s,t > 0$
+
+**proof**: 
+
+Assume $X  \sim  Exp( \lambda )$. Then
+
+![](graphs/cont3.png)
+
+on the other hand assume X is continuous with density f and 
+
+$P(X>s+t | X>s) = P(X>t) for all s,t > 0$
+
+Above we saw that this implies 
+
+$P(X>s+t)=P(X>s)*P(X>t)$
+
+Let h(x) = P(X>x) and let $\epsilon >0$. Note h(0) = P(X>0) = 1 because X is positive. 
+
+![](graphs/cont4.png) 
+
+and so we see $X  \sim  Exp( \beta )$
+
+### The Gamma Distribution
+
+Recall the Gamma function:
+
+![](graphs/cont5.png)
+
+The Gamma function is famous for many things, among them the relationship 
+
+$\Gamma ( \alpha +1) =  \alpha  \Gamma ( \alpha )$ 
+
+which follows from:
+
+![](graphs/cont11.png)
+
+This implies 
+
+$\Gamma(n)=(n-1)!$
+
+so the Gamma function is a continuous version of the factorial. It has many other interesting properties, for example 
+
+$\Gamma (1/2) = \sqrt{\pi}$ 
+
+Now X is said have a *Gamma distribution* ($X  \sim   \Gamma ( \alpha , \beta )$) with parameters ($\alpha , \beta$) if
+
+![](graphs/cont6.png)
+
+By definition we have X>0, and so the Gamma is the basic example of a r.v. on $(0,\infty)$, or a little more general (using a change of variables) on any open half interval.
+
+Note if $X  \sim   \Gamma (1, \beta )$ then $X  \sim  E(1/ \beta )$.
+
+Another important special case is if $X  \sim   \Gamma (n/2,2)$, then X is called a Chi-square r.v. with n degrees of freedom, denoted by $X  \sim   \chi^2(n)$.
+
+#### **Example** 
+
+Find the kurtosis of X where $X  \sim  Exp( \lambda )$
+
+![](graphs/cont28.png)
+so the kurtosis is greater than 0, therefore an exponential is leptocurtic.
+
+`r hl()$hr()`
+
+There is an important connection between the Gamma and the Poisson distributions:
+
+**Theorem**
+
+if $X  \sim   \Gamma (n, \beta )$ and $Y  \sim  Pois(x/ \beta )$ then
+
+$P(X \le x) = P(Y \ge n)$
+
+**proof** (by induction)
+
+![](graphs/cont12.png)
+ 
+### The Beta Distribution  
+
+X is said to have a Beta distribution with parameters $\alpha$ and $\beta$ ($X  \sim  Beta( \alpha , \beta )$) if 
+
+![](graphs/cont7.png)
+
+![](graphs/cont30.png)
+
+
+it is easy to calculate the moments of a Beta distribution:
+
+![](graphs/cont13.png)
+      
+The mgf is given by
+
+![](graphs/cont27.png)   
+
+![](graphs/cont27a.png)
+
+Note that the Taylor expansion of the moment generating function is completely general. 
+
+By definition we have 0<X<1, and so the Beta is the basic example  of a r.v. on [0,1], or a little more general (using a change of variables) on any open finite interval. 
+
+Special cases:
+
+1.  Beta(1,1) = U[0,1]  
+2.  $X  \sim  Beta(p,1)$ then
+
+$f(x)=cx^{p-1}(1-p)^1=cx^{p-1}=px^{p-1}, 0<x<1, p>0$ 
+  
+and for this pdf we have E[X]=p/(p+1), Var[X]=p/[(p+1)^2^(p+2)]
+
+`r hl()$hr()`  
+  
+Let's go back to the Gamma distribution for a moment. Say X and Y are independent $\Gamma ( \alpha , \beta )$ and let Z=X+Y. Then 
+
+![](graphs/cont8.png)
+  
+so we see that $Z  \sim   \Gamma (2 \alpha , \beta )$. In other words, the sum of independent Gamma r.v.'s is again Gamma.
+
+Some special cases:
+  
+1.  X,Y iid Exp($\lambda$) then $X+Y  \sim   \Gamma (2, \lambda )$ (and **not** exponential)
+  
+2.  $X\sim \chi^2(n)$, $Y\sim \chi^2(m)$ and $X\perp Y$, then $X+Y  \sim  \chi^2(n+m)$.
+
+`r hl()$hr()`
+
+Previously we found a curious relationship between the Poisson and the gamma distributions. There is a similar one between the Beta and the Binomial: 
+
+**Theorem**
+
+if $X  \sim  Beta(n,m)$ and $Y  \sim  Bin(n+m-1,1-x)$ then
+
+$P(X \le x) = P(Y<m)$  
+
+**proof** (by induction on m)
+![](graphs/cont29.png)
+
+### Cauchy Distribution
+
+A rv. X has a Cauchy distribution if
+
+![](graphs/cont14.png)
+
+As we saw before the Cauchy has one interesting property: 
+
+$E[|X|]= \infty$
+  
+so the Cauchy has no mean (and therefore no moments at all). The reason is that it has thick "tails", that is the probability of observing a large value (+ or -) is large. 

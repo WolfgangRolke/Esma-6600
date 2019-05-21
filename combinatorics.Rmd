@@ -1,0 +1,148 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+## Combinatorics
+
+We have previously seen that if we have a finite sample space S and all the outcomes are equally likely, then 
+P(A)=n(A)/n(S), so finding probabilities means counting the number of outcomes in A and in S. The mathematical theory that deals with counting is called *combinatorics*. Here we will consider some special cases and their formulas.
+
+### Fundamental Theorem of Counting
+
+**Theorem**  (Fundamental Theorem of Counting)**
+
+If a job consists of k separate tasks, the i^th^ of which can be carried out in n~i~  ways, the entire job can be done in $n_1 \times n_2 \times..\times n_k$  ways
+
+**proof** 
+
+say k=2, say task 1 has outcomes a~1~ ,..,a~n~   and task 2 has outcomes b~1~ ,..,b~m~  , then  clearly there are $n \times m$  combinations. The general case follows from mathematical induction.
+
+#### **Example** 
+
+You possess 5 pairs of shoes, 10 pairs of socks, 4 pairs of trousers and 9 shirts. How many combinations of outfits are there?
+
+$5\times 10 \times 4 \times 9$
+
+`r hl()$hr()`
+
+### Basic Counting Formulas
+
+Many of the problems in combinatorics are variations of the following: say we have a box with n balls, numbered 1 to n, and we select k of them. In how many ways can this be done? In order to answer this question we need to be more specific on how the draws are done:
+
+**Case 1: with order and with repetition** 
+
+Balls are drawn as follows: pick one ball, write down the number, replace the ball in the box, draw a second ball etc. In this case we have the order in which the balls are drawn, and we have repetition , that is the same ball can be chosen more than once. 
+
+Say n=10 and k=3, then some  possible outcomes are: (7,2,3), (7,6,7), (6,7,7)
+
+According to the Fundamental Theorem of counting this each task (drawing a ball) can be done in n ways, and there are k tasks, so the total number of ways is 
+
+$n \times n \times n \times...\times n=n^k$
+
+**Case 2: with order but without repetition** 
+
+Balls are drawn as follows: pick one ball, write down the number, put the ball aside, not back in the box, draw a second ball etc. In this case we have the order in which the balls are drawn but each ball can be drawn only once, so there is no repetition
+
+Say n=10 and k=3, then some  possible outcomes are: (7,2,3), (7,6,4) but not (6,7,7)
+
+According to the Fundamental Theorem of counting the first task (drawing the first ball) can be done in n ways, the second task can be done in n-1 ways and so on until the k^th task which can be done in n-k+1 ways, so the total number of ways is 
+
+$n \times (n-1) \times(n-2) \times...\times (n-k+1)$
+
+This is often call the number of *permutations* of n objects, k at a time, and we use the notation $P^n_k$.
+
+An important special case is k=n, which is just called the permutations of n objects.
+
+**Definition** 
+
+n!=n(n-1)(n-2)..1 is called "n factorial"
+
+Note by definition 0!=1
+
+with this definition we have $P^n_k =n!/(n-k)!$.
+
+**Case 3: without order and without repetition**
+
+Balls are drawn as follows: pick all the balls simultaneously. In this case we have no order and no repetition
+
+Say n=10 and k=3, then some  possible outcomes are: (7,2,3), (7,6,4) but (6,4,7) is the same as (7,6,4)
+
+This is called the number of combinations of n objects, k at a a time, and is denoted by $C^n_k$.
+
+To do this think in terms of a two tasks: first select without order and without repetition (which can be done in $C^n_k$  ways) and then order the k selected objects (in k! ways) The result is a selection with order but without repetition, but this is $P^n_k$!. So we find:
+
+$P^n_k =C^n_k \times k!$, or $C^n_k =n!/(n-k)!/k!$
+
+
+**Definition** (of binomial coefficients) 
+
+$$C^n_k = \frac{n!}{(n-k)!k!} = {{n}\choose{k}}$$
+
+We say "n choose k"
+
+**Case 4: without order but repetition** 
+
+as is case 1, but the order is now irrelevant. This is somewhat more complicated, but the answer is
+
+$${{n+k-1}\choose{k}}$$
+
+
+#### **Example**
+
+How many different license plates can there be in PR? A license plate has three letters and three numbers, order is important and there is repetition, there are
+
+$26\times 26\times 26\times 10\times 10\times 10 = 17,576,000$ 
+
+possible plates
+
+#### **Example: Poker**
+
+Poker is played in a large number of different ways. Here we will keep it simple: we have a deck of 52 cards. Each card has a suit (Hearts, Diamonds, Clubs and Spades) and a denomination (2-10, Jack, Queen, King and Ace). A "hand" is any selection of 5 cards. The order is not important, and each combination of suit-denomination appears only once, so selection is done without order and without repetition.
+
+How many 5-card hands are there? 
+
+$C^52_5  = 52!/47!/5! = 2598960$
+
+What is the probability of a "four of a kind", that is four cards of the same denomination?
+
+First choose the denomination (13 ways), net select all those cards (1 way), finally choose a card from the rest of the deck (48 ways) so
+
+$$P(\text{four of a kind}) =13\times 1\times 48/2598960 = 0.00024$$.
+
+What is the probability of a "full house", that is three cards of one denomination and two cards of a second denomination?
+
+First choose the denomination for the three cards (13 ways) next pick the three cards (C^4_3 =4 ways) then pick the denominations for the two cards (12 ways) and finally pick those two cards (C^4_2 =6 ways), so
+
+$$P(\text{full house}) =13\times 4\times 12\times 6/2598960 = 0.00144$$
+
+Notice that the probability of a "four of a kind" is smaller than the one for "full house", and there fore a "four of a kind" beats a "full house" 
+
+
+
+### Pidgeon Hole Principle
+
+The Pidgeon Hole Principle states that if there are n pidgeons, m pidgeon holes and n>m, there must be at least one hole with more than one pidgeon.
+
+This completely obvious principle has many, often surprising, consequences. One of the most famous is this one:
+
+There must be at least two people in Puerto Rico with the exact same number of hairs on their heads!
+
+We can demonstrate thisas follows. Since a typical human head has an average of around 150,000 hairs, it is reasonable to assume (as an upper bound) that no one has more than 1,000,000 hairs on their head (m = 1 million holes). There are more than 1,000,000 people in San Juan (n is bigger than 1 million items). Assigning a pigeon hole to each number of hairs on a person's head, and assigning people to pigeon holes according to the number of hairs on their head, there must be at least two people assigned to the same pigeon hole by the 1,000,001st assignment.
+
+Perhaps the first written reference to the pigeon hole principle appears in 1622 in a short sentence of the Latin work *Selectae Propositiones*, by the French Jesuit Jean Leurechon, where he wrote "It is necessary that two men have the same number of hairs,  or other things, as each other".
+
+`r hl()$hr()`
+
+Combinatorics is a huge area of mathematics, with applications in almost all fields of science. 

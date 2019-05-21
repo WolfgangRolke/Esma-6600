@@ -1,0 +1,188 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+# Inequalities and Limit Theorems
+
+## Inequalities
+
+Inequalities are very important in probability theory, both for the theory and for practical applications.
+
+We start with a lemma that has nothing to do with probability:
+
+**Lemma**
+
+let a and b be any positive numbers, and let p and q be any positive numbers with 1/p+1/q=1. Then
+
+$$\frac{a^p}{p}+\frac{b^q}{q}\ge ab$$
+
+with "=" iff a^p^=b^q^
+
+**proof**
+
+fix b, and consider the function g with
+
+![](graphs/prob529.png)
+
+so g has a minimum at a^p^-1=b. So
+
+![](graphs/prob530.png)
+
+because $(p-1)q=p$. This follows from
+
+1/p+1/q=1 implies 1+p/q=p implies p/q=p-1.
+
+Moreover the minimum of g is unique because g is convex for all a, so "=" holds iff a^p^-1=b, which is the same as a^p^=b^q^.
+
+**Theorem (Holder's Inequality)** 
+
+Let X and Y be any two rvs, and let p and q be as above. Then
+
+$$|E[XY]| \le E[|XY|] \le (E[|X]^p)^{1/p}(E[|Y]^q)^{1/q}$$
+
+
+**proof**
+
+The first "$\le$" follows from 
+
+$-|XY| \le XY \le |XY|$. For the second $\le$ define
+
+![](graphs/prob531.png)
+
+This is actually a generalization of the Cauchy-Schwartz inequality we discussed earlier: if p=q=1/2 we get
+
+$$|E[XY]| \le E[|XY|] \le \sqrt{E[X^2]}\sqrt{E[Y^2]}$$
+
+These inequalities are stated here in terms of expectations, but they hold in general for sums and integrals as well.
+
+Some other useful cases are: 
+
+If we set Y=1 we get
+
+$E|X| \le {E|X|^p}^{1/p}, 1<p< \infty$
+
+For 1<r<p, if we replace |X| by |X|^r^, we get
+
+$E|X|^r \le \{E|X|^{pr}\}^{1/p}$
+
+and writing s=pr (which implies s>r) we get
+
+**Liapunov's Inequality**
+
+$(E|X|^r)^{1/r} \le (E|X|^s)^{1/s}$ for $1<r<s< \infty$
+
+#### **Example** 
+
+If a rv X has a finite k^th^ moment, it has a finite j^th^ moment for all $j \le k$. 
+
+By Liapunovs inequality
+
+$E[|X|^j]  \le  (E[|X|^k])^{j/k} <  \infty$
+
+`r hl()$hr()`
+
+The inequalities above are not really probability theory but are inequalities from real analysis. Next we consider a new type of inequality true specifically in probability theory: 
+
+**Theorem (Markov's Inequality)**
+
+If X takes on only non negative values, then for any a>0 
+
+![](graphs/prob51.png)
+
+Markov's inequality implies what is perhaps the most famous inequality in probability:
+
+**Theorem (Chebyshev's Inequality)**
+
+If X is a r.v. with mean $\mu$ and variance $\sigma^2$, then for any k>0:
+
+![](graphs/prob52.png)
+
+**Theorem (Chernoff Bounds)**
+
+Let X be a rv with moment generating function $\psi (t) = E[e^{tX}]$. Then for any a>0
+
+$P(X \ge a)  \le  e^{-ta} \psi (t)$ for all  t>0  
+$P(X \le a)  \le  e^{-ta} \psi (t)$ for all t<0
+
+**proof**
+
+For t>0
+
+$$
+\begin{aligned}
+&P(X \ge a)    = \\
+&P(e^{tX} \ge e^{ta}) \le \\
+&\frac{E[e^{tX}]}{e^{ta}}    = e^{-ta}\psi(t)\\
+\end{aligned}
+$$
+
+The proof for t<0 is similar.
+
+`r hl()$hr()`
+
+As we know a random variable that has a moment generating function that is finite in an open neighborhood of 0 has all its moments, that $E[|X|^k]< \infty$ for all k. So this is a rather strong condition, and therefore leads to very good bounds. 
+
+#### **Example** 
+
+say $Z  \sim  N(0,1)$, then
+
+![](graphs/prob533.png)
+
+which is a very useful upper bound on the tail probabilities of a standard normal.
+ 
+`r hl()$hr()`
+
+For the last inequality first recall 
+
+**Definition**
+
+A function g is said to be *convex* if for all x and y and $0< \lambda <1$
+
+$g( \lambda x+(1- \lambda )y)  \le  \lambda g(x)+(1- \lambda )g(y)$
+
+**Theorem (Jensen's Inequality)**
+
+For any rv X, if g is a convex function we have 
+
+$Eg(X) \ge g(EX)$ 
+
+**proof** 
+
+let l(x) be a tangent line to g(x) at the point g(EX). Write 
+l(x)=a+bx for some a and b. Now by the convexity of g we have 
+
+$g(x) \ge a+bx$ 
+
+and so
+
+$Eg(X) \ge E(a+bx)=a+bEX=l(EX)=g(EX)$
+
+Of course if g is a concave function, the -g is convex and we have 
+
+$E[g(X)] = -E[-g(X)]  \le  -(-g(E[X]) = g(E[X])$ 
+
+#### **Example** 
+
+g(x)=x^2^ is convex, and so 
+
+$EX^2 \ge (EX)^2$
+
+which implies 
+
+$Var(X) = EX^2-E[X]^2  \ge  0$
+
+#### **Example** 
+
+If x>0 g(x)=1/x is convex, so $E(1/X) \ge 1/EX$

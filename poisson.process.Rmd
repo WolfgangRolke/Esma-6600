@@ -1,0 +1,343 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+## Poisson Process
+
+**Definition**
+
+A stochastic process $\{N(t),t>0\}$ is called a *counting process* if N(t) is the number of times an event occurred up to time t.
+
+#### **Example** 
+
+Consider an ATM machine and let N(t) be the number of customers served by the ATM machine at time t.
+
+Because of the way it is defined every counting process has the following properties:
+
+1.  $N(t)\ge 0$  
+2.  N(t) is an integer  
+3.  If s<t then $N(s) \le N(t)$   
+4.  If s<t then N(t)-N(s) is the number of events that have occurred in the interval (s,t].
+
+**Definition**
+
+Let $\{N(t);t \ge 0\}$ be a counting process. Then
+
+a. $\{N(t);t \ge 0\}$ is said to have *independent increments* if the number of events that occur in disjoint intervals are independent.
+
+b. $\{N(t);t \ge 0\}$ is said to have *stationary increments* if the distribution of the number of events that occur in any interval of time depend only on the length of the interval.
+
+#### **Example** 
+
+The process of our ATM machine probably has independent increments but not stationary increments. Why?
+
+`r hl()$hr()`
+
+The most important example of a counting process is the Poisson process. To define it we need the following notation, called *Landau's o symbol*:
+
+**Definition (Landau's o symbol)**
+
+a function f is said to be o(h) if 
+
+$$
+\lim_{h\rightarrow 0} \frac{f(h)}h = 0
+$$
+
+
+#### **Example** 
+
+f(x)=x^2^ is o(h) but f(x)=x is not.
+
+**Definition**
+
+A counting process $\{N(t);t \ge 0\}$ is said to be a Poisson process with rate $\lambda>0$ if
+
+1. N(0)=0
+
+2. N(t) has stationary and independent increments
+
+3. $P(N(h)=1) = \lambda h + o(h)$
+
+4. $P(N(h) \ge 2) = o(h)$
+
+Notice that this implies that during a short time period the probability of an event occurring is proportional to the length of the interval and the probability of a second (or even more) events occurring is very small.
+
+**Theorem**
+
+Let $\{N(t);t \ge 0\}$ be a Poisson process, then 
+
+$$
+N(t+s)-N(s)  \sim  Pois(\lambda t)
+$$
+for all $s \ge 0$.
+
+**proof** 
+
+Let p~n~(t) = P(N(t)=n). Then
+
+![](graphs/pois1.png)
+
+where the last equation follows from 
+
+$P(N(h)=0) =$  
+$1-P(N(h) \ge 1) =$ 
+$1-P(N(h)=1) - P(N(h)\ge 2)$
+
+Now
+
+![](graphs/pois2.png)
+
+The same basic idea works for the case p~n~ (t) as well to finish the proof.
+
+**Remark** It is intuitively clear why the definition above should lead to the Poisson distribution. Take the interval (0,t] and subdivide it into k equal size intervals (0,t/k], (t/k, 2t/k) .. ((k-1)t/k,t]. The probability of 2 or more events in any one interval goes to 0 as k goes to $\infty$ because
+  
+P(2 or more events in any subinterval)  
+$\le \sum$ P(2 or more events in the k^th subinterval)  
+= ko(t/k)
+
+$t\times o(t/k)/(t/k)\rightarrow 0$ as $k\rightarrow \infty$.
+
+Hence N(t) will (with probability going to 1) just equal the number of subintervals in which an event occurs. However, by independent and stationary increments this number will have a binomial distribution with parameters k and $p=\lambda t+o(t/k)$. Hence by the Poisson approximation to the binomial we see that N(t) will have a Poisson distribution with rate $\lambda t$.
+
+#### **Example** 
+
+Suppose that N points are uniformly distributed over the interval (0, N). Let X be the number of points in (0,1). Find the pdf of X if N is large. 
+
+Let's try this directly first:  
+
+![](graphs/poiss22.png)
+
+and this get's ugly fast. Instead consider the following: Let N(t) be the points in (0,t), then for t small (relative to N) $\{(N(t), t \ge 0\}$ will be a Poisson process with rate $\lambda$. Now
+
+P(N(1)=0) = P(X=0) = e^-1^, so $\lambda =1$ and so
+
+P(X=n) = P(N(1)=n) = e^-1/n^!
+
+**Definition**
+
+Let T~1~  be the time when the first event occurs, T~2~  the time from the first event until the second event etc. The sequence  T~1~, T~2~, .. is called the sequence of *interarrival  times*.
+
+**Theorem**
+
+Let $\{N(t);t \ge 0\}$ be a Poisson process, and $\{T_i ;i \ge 1\}$ be the interarrival times. Then 
+
+$T_1 , T_2 , .. \sim Exp(\lambda)$ and $T_i \perp T_j$
+
+**proof**
+
+Note that \{T~1~ >t\} is equivalent to \{no events occurred in (0,t]\} and so
+
+![](graphs/pois3.png)
+
+and we see that $T_1\sim  Exp(\lambda)$. But
+
+![](graphs/pois4.png)
+
+because of independent and stationary increments. So we find that $T_2\sim  Exp(\lambda)$ and that $T_1 \perp T_2$. By induction it is clear that the sequence $\{T_n ,n=1,2,..\}$ is an iid sequence of exponential r.v. with mean $1/\lambda$.
+
+**Remark** This result should not come as a surprise because the assumption of independent and stationary increments means that the process from any moment on is independent of all that occurred before and also has the same distribution as the process started at 0. In other words the process is memoryless, and we have previously shown that any continuous rv on $(0, \infty)$ with the memoryless property has to have an exponential distribution.
+
+**Definition**
+
+Let S~n~  be the arrival time of the n^th^ event. (This is also often called the *waiting time* until the n^th^ event).
+
+**Theorem**
+
+Let $\{N(t);t \ge 0\}$ be a Poisson process, and $\{S_n; n \ge 1\}$ be the waiting times. Then 
+
+$S_n  \sim  \Gamma(n,\lambda)$
+
+**proof**
+
+Clearly $S_n  = \sum^n_{i=1} T_i$, and so we find 
+
+$S_n  \sim  \Gamma(n,\lambda)$
+
+#### **Example** 
+
+Up to yesterday a store has 999,856 customers. They are planning to hold a little party when the 1,000,000^th^ customer comes into the store. From experience they know that a customer arrives about every 4 minutes, and the store is open from 9am to 6pm. What is the probability that they will have the party today?
+
+They will have the party if at least 144 customers come into the store today. Let's assume that the customers arrive according to a Poisson process with rate 4min (?), then we want the probability 
+P(S_144  < 9*60).
+
+Now $S_{144}  \sim \Gamma (144,4)$
+
+and so 
+
+```{r}
+round(pgamma(9*60, 144, 1/4), 4)
+```
+  
+
+Here is another proof of the last theorem. We use the fact that the n^th^ event occurs at or before time t if and only if the number of events occurring by time t is at least n. So
+ 
+$$
+N(t) \ge n \text{ iff } S_n \le t 
+$$
+
+This is a very useful equivalence, and much more general than just for the Poisson process, so here is an illustration: 
+![](graphs/pois6.png)
+
+With this we find 
+
+![](graphs/pois5.png)
+
+#### **Example** 
+
+Say that on any given day hundreds of cars pass through a certain intersection. Any one of them has a (hopefully small) probability of having an accident at that intersection. Let X(t) be the number of accidents in the t days, then is X(t) a Poisson process? 
+
+There are two problems with the assumptions of the Poisson process here:
+
+-  different days might have different numbers of cars going through (weekdays vs. weekends?) 
+
+-  the probability of having an accident is probably very different for different cars. 
+
+The first problem might be handled by considering a different time-scale (accidents per week?), the second problem actually is not a problem at all:
+
+let Z~1~, Z~2~, .. be independent Bernoulli rv's with P(Z~i~ =1)=p~i~. Let S~n~ =Z~1~ +..+Z~n~. Then if $\lambda=p_1 +..+p_n$  it can be shown that
+
+![](graphs/poiss7.png)  
+
+In the "classic" case where $p_1 =..=p_n =p=\lambda/n$ we have 
+
+![](graphs/poiss8.png)
+
+and we see that this theorem not only gives us reason to think that the Poisson approximation works in the example above, it also provides a useful estimate of the error in the Poisson approximation to the Binomial.
+
+`r hl()$hr()`
+
+We have seen previously  that if 
+
+$U_1 ,..,U_n  \sim U[0,1]$ 
+
+and independent, then (U~(1)~,..,U~(n)~) has joint density 
+f(u~(1)~,..,u~(n)~)=n!, 0<u~(1)~< ..<u~(n)~<1.
+
+Clearly if $U_1 ,..,U_n  \sim U[0,t]$ and independent, then (U~(1)~,..,U~(n)~)  has joint density 
+
+f(u~(1)~,..,u~(n)~)=n!/t^n^, 0<u~(1)~< ..<u~(n)~<t
+
+Let W~i~ =U~(i)~. Now
+
+**Theorem** 
+
+let W~1~, W~2~,.. be the arrival times in a Poisson process with rate $\lambda$. Then
+
+![](graphs/poiss11.png)
+
+In other words, conditional on the total number of arrivals the arrival times have the same distribution as the order statistic of a uniform.
+
+#### **Example** 
+
+say $\{N(t),t \ge 0\}$ is a Poisson process with rate $\lambda$. Find the mean time of the first event, given that $N(1)=n, n \ge 1$.
+
+![](graphs/poiss21.png)  
+
+#### **Example** 
+
+Customers arrive at a store according to a Poisson process of rate $\lambda$. Each customer pays \$1 on arrival, and we want to evaluate the expected value of the total sum collected during (0,t] discounted back to time 0. If the discount (inflation) rate is $\beta$, then this is given by
+
+![](graphs/poiss12.png)
+
+Now
+
+![](graphs/poiss13.png)
+
+**Theorem** 
+
+Consider a Poisson process $\{(N(t), t \ge 0\}$ with rate $\lambda$, and suppose each time time an event occurs it is classified as either type I or II, with probabilities p and q=1-p, respectively, independent of anything else. Let N~1~(t) and N~2~(t) be the respective number of type I and II arrivals by time t, then $\{N_1 (t), t \ge 0\}$ and $\{N_1 (t),t \ge 0\}$ are both Poisson process with resp. rate $p\lambda$ and $(1-p)\lambda$. Furthermore the processes are independent.
+  
+**proof**
+
+![](graphs/poiss14.png)
+
+where the equation in the middle follows from the fact that if there were a total of n+m events the probability that n where of type I and m were of type II is just the binomial probability.
+
+The theorem easily generalizes to r types. 
+
+#### **Example** 
+Customers arrive at a store according to a Poisson process with rate of 2 per hour. Each customer is a "Buyer" with probability 0.3 or a "Window-Shopper" with probability q=0.7. What is the probability of at least 1 sale during a 2 hour period?
+
+P(at least 1 sales) =  
+$P(N_1 (t) \ge 1) =$ 
+$1-P(N_1 (t)=0) = 1-\exp(-2*2*0.3) = 1-e^{-1.2} =0.7$
+
+#### **Example (Coupon Collection Problem)**
+
+There are m different coupons. Each time a person collects a coupon it is, independently of those previously obtained, of type j with probability p~j~. Let N denote the number of coupons one needs in order to have a complete collection of at least one of each type. Find E[N].
+
+Let N~j~  be the number of coupons needed until we have one of type j, then $N=\max\{N_j; 1\le j\le m\}$.
+
+It is easy to see that $N_j  \sim G(p_j )$, but they are not independent and so finding the distribution of their maximum is very difficult.
+
+Let's assume that that coupons are collected according to a Poisson process with rate 1, and say an event is of type j if the coupon collected was of type j. If we let N~j~ (t) denote the number of type j coupons collected by time t, then it follows that $\{N_j (t),t \ge 0\}$ are independent Poisson processes with rates p~j~.
+
+Let X~j~  denote the time of the first event of type j, and let $X=\max\{ X_j; 1 \le j \le m\}$  be the time when we have all the coupons. Now the X~j~  are the waiting times of independent Poisson processes, so they have an exponential distributions and are independent, so
+
+![](graphs/poiss15.png)
+
+Now let T~i~  be the i^th^ interarrival time, that is the time between finding the (i-1)^st^ and the i^th^ coupon. $X= \sum T_i$, but $T_i  \sim Exp(1)$, and they are independent, so
+
+$E[X|N]=E[\sum T_i |N]=NE[T_1 |N]=N$
+
+so
+
+E[X]=E\{E[X|N]\}=E[N]
+
+For example, say p~1~ =..=p~n =p=1/m, then
+
+![](graphs/poiss16.png)
+
+```{r echo=FALSE}
+E <- rep(0, 9)
+for(m in 2:10) {
+  k <- 0:(m-1)
+  E[m-1] <- round(m*sum(choose(m, k)*(-1)^(m-k-1)/(m-k)), 2)
+}
+df <- data.frame(m=m, E=E)
+colnames(df)[2] <- "E[N]"
+kable.nice(df, do.row.names=FALSE)
+```
+
+What if m-1 have the same probability, but one is rarer, say only half of the probability of the others? So (wlog) 2p~1~ ==p~2~ =..=p~m~ =1, then p~i =1/(m-1/2) for $i \le 2 \le m$ and p~1~ =1/[2(m-1/2)] 
+
+![](graphs/poiss17.png)
+
+this integral has to be found numerically, using some numerical integration method. We find
+
+```{r echo=FALSE}
+E <- c(3.5,  6.4,  9.6, 13.0,
+       16.6, 20.4, 24.2, 28.2, 32.3)
+kable.nice(df, do.row.names=FALSE)
+```
+
+
+**Proposition**: If $\{N_i (t);t \ge 0\}$, i=1,..,k represent the number of type i events occurring in (0,t] and if P~i~(t) is the probability that an event occurring at time t is of type i, then
+
+![](graphs/poiss18.png)
+
+#### **Example** (HIV-Aids) 
+
+one of the difficulties in tracking the number of HIV infected people is its long incubation time, that is an infected person does not show any symptoms for a number of years, but is capable of infecting others. 
+
+Let us suppose that individuals contract HIV according to a Poisson process with unknown rate $\lambda$. Suppose that the incubation time until symptoms appear is a rv with cdf G, which is known, and suppose incubation times are independent. Let N~1~(t) be the number of individuals that have shown symptoms at time t, and let N~2~(t) be the number that have contracted HIV at time t but not yet shown symptoms. An individual that contracts HIV at time s will show symptoms at time t with probability G(t-s), so it follows from the above proposition that
+
+![](graphs/poiss19.png)
+
+say we know the number of individuals with system as time t is n_1 , then
+
+![](graphs/poiss20.png)
+
+for example if t=16 years, $\mu=10$ years and n~1~ =220,000, then n~2~ =219,00.

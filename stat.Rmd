@@ -1,0 +1,196 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+# Statistics
+
+## Basic Concepts of Statistics
+
+Statistics is of course a whole branch of Science all by itself. Here we will just introduce a few basic ideas.
+
+Probability theory and Statistics have in common that both start with a probability model. Typically such models have *parameters*, for example the success probability p in a Bernoulli rv or the rate $\lambda$ in an exponential distribution. In probability theory we then have problems such as: if p=0.2, what is the mean of the Bernoulli rv? In other words we assume we know the parameters and then ask questions about possible outcomes.
+
+In Statistics it is exactly the other way around: we already have observed outcomes from a rv and we are asking what the parameters might be. 
+
+#### **Example** 
+
+Say a Bernoulli trial has been carried out 1000 times, and resulted in 345 successes and 655 failures. What can be said about p?
+
+The answer seems obvious: a good guess for p should be 
+
+$\hat{p}= 345/1000 = 0.345$
+
+but of course it may not be obvious in other problems. Moreover, even in this most simple of problems there are issues. For example, say we strongly suspect that p=0.4. Is this compatible with our experiment?
+
+Let's do a little probability: Each Bernoulli trial is a rv $Y_i  \sim$ Ber(p). Moreover we can assume (here) that the Bernoulli trials are independent, so the number of success is
+
+$X=Y_1 +..+Y_n  \sim$ Bin(n,p) 
+
+with n=1000. So our probability model is 
+
+$$f(x|p)={n\choose x}p^x(1-p)^{n-x}$$
+
+notice the notation here: f(x|p), reminiscent of our notation for conditional pdf's. This is intentional, because we want to think of this as 
+
+"Probability of some outcome given some value of the parameter" 
+
+In Statistics, though, the "unknown" is the parameter p, and we already know x=345, so we formally we can turn this around and write
+  
+$$L(p|x)={n\choose x}p^x(1-p)^{n-x}$$
+
+This is then called the *likelihood function*.
+
+Notice that the right side is exactly the same, but we have shifted our point of view: instead of p being fixed and x being a variable, now x is fixed and p is a  variable!
+
+The likelihood function is the most fundamental entity in (almost) any statistical analysis.
+
+What does it look like? Here is its graph:
+
+```{r}
+p <- seq(0.2, 0.5, length=250)
+y <- dbinom(345, 1000, p)
+df <- data.frame(p=p, y=y)
+ggplot(data=df, aes(p, y)) +
+  geom_line(size=1.1, color="blue") 
+```
+
+We see that L(p|345) has a unique maximum. This of course is the value of p that is *most likely* given the data. Let's find it analytically.
+
+Clearly we want to find 
+
+argmax{L(p|x)}
+
+so we could find 
+
+d/dp\{L(p|x)\}
+
+It turns out that often it is easier to find
+
+d/dp\{log(L(p|x))\}
+
+but this is of course the same because
+
+d/dp\{log(L(p|x))\} =  
+d/dp\{L(p|x)\}/L(p|x) = 0 
+
+iff d/dp\{L(p|x)\}=0
+
+So now 
+
+![](graphs/stat4.png)
+
+and we found the same "obvious" answer!
+
+The estimator $\hat{p}$ of p arrived at in this way is called the *maximum likelihood estimator*.
+
+Here is a completely different solution to the same problem: We will now think of p as an unknown quantity. As with all things unknown we might already have some idea what p might be, just not exactly. It then makes sense to treat p as a rv, with some probability distribution. Of course p is a parameter, a fixed quantity and therefore not a random variable. It is our uncertainty regarding its value that makes it appear "random". 
+
+So, how should we model p? One thing is clear: $p \in [0,1]$, so maybe a Beta distribution might work. Now we have two random variables, and their distributions:
+
+-  $X \sim Bin(n,p)$  
+-  $p \sim Beta(\alpha,\beta)$
+
+Don't worry about the introduction of yet other parameters - $\alpha$ and $\beta$. We will talk about them soon.
+
+Assuming that X and p are independent we can the find the joint pdf of (X,p): 
+
+![](graphs/stat5.png)
+
+The logic is this: $\pi$ is what we knew about p before our experiment, f(x|p) is  the outcome of the experiment. An obvious question then is: how has the experiment changed what we know about p? This should be "encoded" in the posterior distribution f(p|x):
+
+![](graphs/stat6.png) 
+
+so $p|X=x \sim Beta(x+\alpha,n-x+\beta)$.
+
+Finally, to get an estimate of p we need to "extract" one value from this posterior distribution. One choice would be to use the mean:
+
+$$\hat{p}   = E[p|X=x] = \frac{x+\alpha}{n+\alpha+\beta}$$
+
+Now, though, we need to say what $\alpha$ and $\beta$ are. These are meant to "encode" what we knew about p before the experiment. Here are two examples:
+
+-  we knew absolutely nothing about p, any value between 0 and 1 was just as likely as any other. Then we might use
+
+$p \sim U[0,1]=Beta(1,1)$
+
+This type of prior is called *non-informative* because it does not make any one value of p more likely than any other. Now we find
+p = (x+1)(n+2) = 346/1002 = 0.3453.
+
+-  we were quite certain that p is somewhere between 0.3 and 0.5, with 0.4 the most likely and the pdf of p symmetric around 0.4.
+
+This type of prior is called *subjective* because it encodes our subjective belief about p. Now E[p]=0.4 and sd(p)=0.2/4 = 0.05 (using the ballpark estimate range=4sd) and therefore 
+
+![](graphs/stat7.png)
+
+and then we get 
+
+$p =  (x+\alpha)/(n+\alpha+\beta) =  (345+38)/(1000+38+57) = 0.3498$
+
+`r hl()$hr()`
+
+The two solutions outlined above are examples of the two fundamentally different approaches to Statistics we have today: the first one is based on a definition of probability as the long run relative frequency of an event, in fact in this example that is exactly what the maximum likelihood estimator is: 
+
+x/n = relative frequency of successes
+
+This type of statistical analysis is called *Frequentist*. The second solution uses Bayes' theorem to combine a *prior distribution * on the parameter with the data likelihood to calculate the posterior distribution, and this approach is called *Bayesian Statistics*. 
+
+The essential difference between the two is not the use of Bayes' theorem but the use of a prior in Bayesian statistics. 
+
+#### **Example** 
+
+let's continue the discussion of the experiment above. So far we have found a *point estimates* for p, that is a single number we think is a good guess. But of course it is highly unlikely that we got the true value of p exactly right, for example if we were to repeat the experiment maybe next time we would see 376 successes, and our (frequentist) estimate would then be 0.376. Instead of a single best guess, maybe we should give a range of values (almost) certain to include the true p. This is done by quoting an *interval estimate*:
+
+**Frequentist Solution **
+
+**Definition**
+
+A $100(1-\alpha)\%$ *confidence interval* for a parameter $\theta$ is an interval (L(x),U(x)) such that 
+
+$P(L(X)<\theta<U(X)) \ge 1-\alpha$ for all $\theta$
+
+To find a confidence interval for  our example we can make use of the central limit theorem: 
+
+![](graphs/stat8.png)
+
+and so a 90% confidence interval for p is (0.32,0.37) 
+
+**Bayesian Solution**
+
+**Definition**
+
+A $100(1-\alpha)\%$ **credible interval** for a parameter $\theta$ is an interval (L,U) such that 
+
+$P(L<\theta<U|X=x) = 1-\alpha$ 
+
+so again the answer comes from the posterior distribution p|X=x. In our case (using again the Beta prior) we have found the posterior distribution to be 
+
+$p|X=x \sim Beta(x+\alpha,n-x+\beta)$
+
+and so we need L and U such that
+
+$P(L<p<U|X=x) = 1-\alpha$ 
+
+there are many such intervals, for example we could take L=0 and find U accordingly. One idea often used is to split up the probability $\alpha$ into $\alpha/2$ on the left and $\alpha/2$ on the right (actually that is just what we did in the frequentist solution as well) Then we get 
+
+![](graphs/stat9.png)
+
+and the corresponding equation for U. These are equations that have to be solved numerically:
+
+```{r}
+x <- 345; n <- 1000; alpha <- 1; beta <- 1
+round(qbeta(c(0.025, 0.975), x+alpha, n-x+beta), 3)
+alpha <- 38; beta <- 57
+round(qbeta(c(0.025, 0.975), x+alpha, n-x+beta), 3)
+```
+
+Notice that the credible interval using the Beta(1,1) prior is the same as the frequentist confidence interval. This happens quite often (but not always) when we use a non-informative prior. Also notice that although the Beta(1,1) prior is very different from the Beta(38,57), the resulting intervals are almost the same. This is what we expect (and hope) to see if there is a lot of data. To what degree the result of an analysis depends on the chosen prior is always an important consideration in Bayesian analysis, and is studied in what is called a sensitivity analysis. 

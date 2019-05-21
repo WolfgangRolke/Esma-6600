@@ -1,0 +1,154 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  html_document: default
+  pdf_document:
+    fig_caption: no
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+# Probability
+
+## Fundamentals
+
+The probability of rain tomorrow is 30% (or 0.3)
+
+**What does that mean?**
+
+It will likely come at a surprise that the answer to that question is not a simple one. In fact, experts (mathematicians, statisticians, philosophers etc) have been thinking about  this question for centuries, and yet there is no single universally accepted answer to it,  even today. 
+
+In this course we will eventually do the "math thing" and   start with a set of axioms, from which one can derive the whole theory of probability.
+
+
+But rather than simply state those axioms I want to show you that they are  at    least "reasonable". 
+
+The following is in large part taken from the book
+
+**Principles of Uncertainty** by  Joseph B. Kadane
+
+### The Idea of the Sure Loser 
+
+Let's go back to the question of rain tomorrow, and let's also add the question: Is the temperature tomorrow going to be over 90 degrees Fahrenheit? If we take the two together we get the four possibilities:
+
+$A_1$ : Rain and High above 90 degrees F tomorrow  
+$A_2$ : Rain and High at or below 90 degrees F tomorrow  
+$A_3$ : No Rain and High above 90 degrees F tomorrow  
+$A_4$ : No Rain and High at or below 90 degrees F tomorrow  
+
+Tomorrow, one and only one of these events will occur. In mathematical language, the  events are *exhaustive* (at least one must occur) and *disjoint* (no more than one can occur). (Sometimes we also say they form a *partition*).
+
+Let's assume there are four tickets, one for each of the four possibilities. You can offer to either buy one of these tickets from me or sell me one. Let's say you 
+ decide to sell me ticket $A_1$ , for which I will pay you \$p. Then if it rains tomorrow and the high is above ninety you will pay me \$1, otherwise you owe me nothing. 
+ 
+Now an important idea is that in a deal that is fair for both sides it doesn't matter who is the seller and who is the buyer. The price p reflects what you think the ticket is worth either way. It is (in your opinion, which might be different from mine) a fair price for this ticket. In fact I will decide whether to buy or sell a ticket after you named the price. 
+
+This is like the old idea of how to devide a piece of cake between two people: one divides it into two pieces, the other gets to choose. Clearly it is in the first persons best interest to divide the piece as evenly as possible. 
+
+The intuition behind this is that if you are willing to buy or sell a ticket on $A_1$  for \$0.70, you consider $A_1$  more likely than if you were willing to buy or sell it for only \$0.10. The price p is in your opinion the likelihood of $A_1$  happening.
+
+Let us suppose that in general your price for a \$1 ticket on $A_1$  is Pr($A_1$ ) (pronounced  "price of $A_1$"), and in particular you name 30 cents. This means that I can sell you such a ticket for \$0.30 (or buy such a ticket from you for \$0.30). If I sell the ticket to you and 
+  it rains tomorrow and the temperature is above 90 degrees Fahrenheit, I would have to pay you \$1. If it does not rain or if the temperature does not rise to be above 90 degrees Fahrenheit, I would not pay you anything. Thus in the first case, you come out \$0.70 ahead, while in the second case I am ahead by \$0.30. 
+  
+Similarly you name prices  Pr($A_2$ ), Pr($A_3$ ) and Pr($A_4$).
+  
+Now of course you would like to win money in this game, but there is no way to make sure of that. On the other hand it would clearly be stupid for you to name prices that would assure the I win (and you loose). What can we say about prices that would make you a **sure looser**? 
+
+To take the simplest requirement first, suppose you make the mistake of offering a negative price for an event, for example 
+
+Pr($A_1$ ) = - \$0.05
+
+This would mean that you offer  to sell me ticket $A_1$  for the price of -\$0.05, (i.e., you will give me the ticket and 5 cents).  If event $A_1$  happens, that is, if it rains and the high temperature is more than 90 degrees Fahrenheit, you owe me \$1, so your total loss is \$1.05. On the other hand, if event $A_1$  does not happen, you still lose \$0.05. Hence in this case, no matter what happens, you are a sure
+  loser. To avoid this kind of error, your prices cannot be negative, that is, for every event A, you must specify prices satisfying
+
+Pr(A)$\ge$ 0 (Rule 1)
+
+Now consider the sure event S. In the example we are discussing, S is the same as the event of either $A_1$  or $A_2$  or $A_3$  or $A_4$ , which is a formal mathematical way of saying either it  will rain tomorrow or it will not, and either the high temperature will be above 90 degrees Fahrenheit or not. 
+
+What price should you give to the sure event S? If you give a price
+  below \$1, say \$0.75, I can buy that ticket from you for \$0.75. Since the sure event is sure to happen, tomorrow you will owe me \$1, and you will have lost \$0.25, whatever the weather will be. So you are sure to lose if you name any price below \$1. Similarly, if you offer a price above \$1 for the sure event S, say \$1.25, I can sell you the ticket for \$1.25. Tomorrow, I will certainly owe you \$1, but I come out ahead by \$0.25 whatever happens. So you can see that the only way to avoid being a sure loser is to have a price of exactly \$1 for S. This isthe second requirement to avoid a sure loss, namely,
+  
+Pr(S) = 1 (Rule 2)
+
+Next, let's consider the relationship of the price you would give to each of two disjoint sets A and B to the price you would give to the event that at least one of them happens, which is called the union of the events A and B, and is written $A\cup B$.
+
+To be specific, let A be the event $A_1$  above, and B be the event $A_2$  above. These events are disjoint, that is,  they cannot both occur, because it is impossible that the high temperature for the day is
+  both above and below 90 degrees Fahrenheit. The union of A and B in this case is the event  that it rains tomorrow.
+
+Suppose, that your prices are \$0.20 for $A_1$ , \$0.25 for $A_2$  and \$0.40 for the union of $A_1$  and $A_2$ . Then I can sell you a ticket on $A_1$  for \$0.20, and a ticket on $A_2$  for
+  \$0.25, and buy from you a ticket on the union for \$0.40. 
+  
+Let's see what happens. Suppose first that it does not rain. Then none of the tickets have to be settled by payment. But you 
+  gave me \$0.20 + \$0.25 = \$0.45 for the two tickets you bought, and I gave you \$0.40 forthe ticket I bought, so I come out \$0.05 ahead. 
+  
+Now suppose that it does rain. Then one of  $A_1$  and $A_2$  occurs (but only one. Remember that they are disjoint). So I have to pay you
+  \$1. But the union also occurred, so you have to pay me \$1 as well. In addition I still have
+  the \$0.05 that I gained from the sale and purchase of the tickets to begin with. So in every
+  case, I come out ahead by \$0.05, and you are a sure loser. 
+  
+The problem seems to be that  you named too low a price for the ticket on the union. Indeed, any price less than \$0.45
+  leads to sure loss, with the same argument as above.
+  
+How about charging more than \$0.45, say \$0.60? Now if I do the exact opposite, namely sell you the union and buy from you $A_1$  and $A_2$  it easy to see that you are a sure looser again. The only way for you not be a sure looser is if you choose the prices such that
+
+Pr($A \cup B$) = Pr(A)+Pr(B) (Rule 3) 
+
+Now we have seen three requirements for any prices so you are not a sure looser. In a bit we will show that in fact these are all the requirements!
+
+Prices satisfying these equations are said to be **coherent**. The derivations of   equations  are constructive, in the sense that I reveal exactly which of  your offers I accept to make you a sure loser. Also note that because it is always you who is naming the prices my beliefs (prices) are irrelevant to making you a sure loser.
+
+The equations  are of course the equations that define Pr() to be a probability  (with the possible strengthening of Rule 3 to be taken up later). To emphasize  that, we will now assume that you have decided not to be a sure loser, and hence to  have your prices satisfy equations 1-3. I will write P() instead of Pr(), and think of P(A) as your probability of event A. 
+
+Although the approach here is called subjective, there are both subjective and objective   aspects of it. It is an objective fact, that is a mathematical theorem, that you cannot be made a sure   loser if and only if your prices satisfy equations 1-3. However, the prices   that you assign to tickets on any given set of events are personal, or subjective, in that  the theorems do not specify those values. Different people can have different probabilities   without violating coherence.
+
+To see why this is natural, consider the following example: Imagine I have a coin that we   both regard as fair, that is, it has probability 1/2 of coming up heads. I flip it, but I don't  look at it, nor do I show it to you. Reasonably, our probabilities are still 1/2 for  heads.
+  
+Now I look at it, and observe  heads, but I don't show it to you. My probability is now 1.  Perhaps yours is still 1/2. But perhaps you saw that I raised my left eyebrow when I looked   at the coin, and you think I would be more likely to do so if the coin came up heads than   tails, and so your probability is now 60%. Finally I   show you the coin, and your probability    now rises to 1. 
+
+The point of this thought-experiment is that probability is a function not  only of the coin, but also of the information available to the person whose probability it is.   Thus subjectivity occurs, even in the single flip of a fair coin, because each person can have      different information and beliefs.
+
+There are a number of subtleties here which we will not discuss in detail. As one example, let's say you named a price p for A this morning. Now in the the afternoon you change your mind, not because there is any new information but just because you feel like it. Now if your new price is higher, and I bought the ticket for A from you this morning, I can now sell it back to you for the new higher price, and you are a sure looser again! One might call this a dynamic sure loss.
+It is important to remember that coherence is a minimal set of requirements on probabilistic opinions. The most extraordinary 
+nonsense can be expressed coherently, such as that the moon is made of green cheese. Moreover, there is a substantial body of psychological research dedicated to finding systematic ways in which the prices that people actually offer for tickets or the equivalent fail to be 
+coherent.
+
+There is a special issue about whether personal probabilities can be zero or one. The   implication is that you would bet your entire fortune present and future against a penny on   the outcome, which is surely extreme. In the example above, I propose that when   I see that the coin came up heads, my probability is one that it is heads. But could I have 
+  seen wrong? For the sake of the argument I am willing to set that possibility aside, but I must concede that sometimes I do get things wrong, so I can't really mean probability one.
+  
+Is there an event you would be willing to bet your live on? 
+
+The approach to probability described here is sometimes referred to as **behavioristic**. It is not the only one. Two other common approaches are
+
+-  **Frequentist**
+
+Here a probability is the long run frequency of an event happening. Take our event $A_1$ : Rain and High above 90 degrees F tomorrow. We could go to some website (or meteorological office) and find out in how many of the last 10000 days it rained and the high was over 90, and then use the ratio as our probability. 
+
+There are two main problems with this approach. One is that we only know the "true" probability after observing infinitely many experiments, clearly impossible. The other one is what to do with an event like: The universe will explode in less than $10^{10}$ days. There is only one universe, so how can we run this experiment more than once?
+
+-  **Axiomatic**
+
+Here a probability is simply defined as any assignment of numbers to events that satisfy Rules 1-3, without any regard to their meaning. Of course, probability theory is supposed to help us with real live events, so this is also not very satisfying.
+
+These are not all the apporaches either, there are many others, all of them with some strenghts and some weaknesses.
+
+### Sufficiency of Rules 1-3
+
+Let us now show that if your prices satisfy equations 1-3, you can not be made a sure loser. To do so we will have to use some concepts and results of probability theory which we will get to later in the course but which you likely have heard of before!
+
+Suppose first that you announce price p for a ticket on event A. If you buy such a ticket  it will cost you p, but you will gain \$1 if A occurs, and nothing otherwise. Thus your gain from the transaction is exactly $I_A - p$, where $I_A$  is the indicator function of A, that is $I_A =1$ if A happened and 0 if not.  If you sell such a ticket, your gain is $p-I_A$. Both  of these can be represented by saying that your gain is $\alpha (I_A -p)$ where $\alpha$ is the number oftickets you buy. If $\alpha$ is negative, you sell $\alpha$ tickets.
+  
+With many such offers your total gain (or loss) is
+
+![](graphs/prob01.png)
+
+where your price on event $A_i$  is $p_i$. The numbers $\alpha_i$  may be positive or negative, but are not in your control. But whatever choices of $\alpha$'s I make, positive or negative, W is the random variable that represents your gain, and it takes a finite number of values. Let's compute the expectation of W:
+
+![](graphs/prob02.png)
+Now if you could be made a sure loser we would have $P(W<0)=1$ (there is no chance of you winning), but then $E[W]<0$ as well, and we have a contradiction. 
+

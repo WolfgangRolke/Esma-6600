@@ -1,0 +1,460 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+##  Markov Chains
+
+### Basic Definition
+
+**Definition**
+
+The sequence of r.v.  X~1~,  X~2~, .. is said to be a *Markov chain* if for any event A we have 
+
+$P(X_n \in A | X_1 = x_1, .., X_{n-1}=x_{n-1}) = P(X~n \in A | X_{n-1}=x_{n-1})$
+
+that is X~n~ depends only on X~n-1~ but not on any of the r.v. before it.
+
+Clearly a Markov chain is a discrete-time  space stochastic process. It can have  either a discrete or continuous state space. 
+
+If we think of the index n as a time variable, then all that matters for the state of the system at time n is where it was at time n-1, but not on how it got to that state.
+
+#### **Example (Random Walk)**
+
+Say we flip a coin repeatedly. Let the random variable Y~i~ be 1 if the i^th^ flip is heads, -1 otherwise. Now let $X_n = \sum^n_{i=1}  Y_i$.
+
+Clearly we have 
+
+![](graphs/mark11.png)
+
+`r hl()$hr()`
+
+For a Markov chain  all the relevant (probability) information is contained in the probability to get from state i to state j in k steps. For k=1 this is contained in the *transition matrix* P = (p~ij~ ), and in fact as we shall see  P is all we need.
+
+#### **Example (Random Walk, cont)**
+
+Here we have p~ij~  = 1/2 if |i-j|=1, 0 otherwise.
+
+#### ** Example (Asymmetric Random Walk)**
+
+As above the state space are the integers but now we go from i to i+1 with probability p, to i-1 with probability q and stay at i with probability 1-p-q.
+
+#### **Example (Ehrenfest chain)**
+
+Say we have two boxes, box 1 with k balls and box 2 with r-k balls. We pick one of the balls at random and move it to the other box. Let X~n~ be the number of balls in box 1 at time n. 
+
+First note that we have $X_n  \in \{0,1,..,r\}$. Now say X~n~ =k, so there are k balls in urn 1, therefore r-k balls in urn 2. In the next step we either move a ball from urn 1 to urn 2, or vice versa, so X~n+1~ =k+1 or X~n+1~ =k-1. Now
+
+p~k,k+1~  = P(X~n+1~ =k+1|X~n~ =k) =  
+P(move ball from urn 2 to urn 1 | k balls in urn 1) =  
+P(pick one of the r-k balls in urn 2) = (r-k)/r
+
+also
+
+p~k,k-1~  = 1-p~k,k+1~  = k/r and p~i,j~  = 0 otherwise.
+
+Ehrenfest used this model to study the exchange of air molecules in two chambers connected by a small hole.
+
+#### **Example (Umbrella)**
+
+Say you own r umbrellas, which are either at home or in your office. In the morning if it rains you take an umbrella, if there is one at home, equally in the evening in the office. Say it rains in the morning or in the evening independently with probability p. Analyze this as a Markov chain and find the transition matrix.
+
+**Solution 1:** Say X~n~  is the number of umbrellas at home in the morning of the n^th^ day, then $X_n \in \{0,1,..,r\}$. Now
+
+P(X~n~ =i|X~n-1~ =i) =  
+P(it is raining in the morning and evening or it is not raining in the morning and evening) =  
+$p^2+q^2, 1 \le i \le r$
+
+P(X~n~ =i-1|X~n-1~ =i) =  
+P(it is raining in the morning but not in the evening) =  
+$pq, 1 \le i \le r$
+
+P(X~n~ =i+1|X~n-1~ =i) =  
+P(it is not raining in the morning but it is raining in the evening) =  
+$qp, 1 \le i \le r-1$
+
+P(X~n~ =0|X~n-1~ =0) =  
+P(it is not raining in the evening) = q
+
+P(X~n~ =1|X~n-1~ =0) =  
+P(it is raining in the evening) = p 
+
+P(X~n~ =r|X~n-1~ =r) =  
+P(it is not raining in the morning or it is raining both times) = q+p^2^
+
+so
+
+![](graphs/mark126.png)
+
+**Solution 2:** Say X~n~  is the number of umbrellas at your present location (home or work), then $X_n \in \{0,1,..,r\}$. Now
+
+P(X~n~ =r|X~n-1~ =0) = P(no umbrellas where you were last) = 1  
+P(X~n~ =r-i|X~n-1~ =i) = P(it is not raining) = q, $1 \le i \le r$  
+P(X~n~ =r-i+1|X~n-1~ =i) = P(it is  raining) = p, $1 \le i \le r$  
+
+![](graphs/mark127.png)
+
+both of these describe the "experiment".
+
+`r hl()$hr()`
+
+Say we have a Markov chain  X~n~, n=1,2,.. with transition matrix P. Define the n-step transition matrix 
+
+$P^{(n)} = (p^{(n)}_{ij} )$
+
+by 
+
+$p^{(n)}_{ij}  = P(X_n=j|X_0=i)$
+
+Of course P^(1)^ = P. Now
+
+![](graphs/mark12.png)
+
+#### **Example (Ehrenfest chain)**
+
+Let's find the 2-step transition matrix for the Ehrenfest chain with r=3. The transition matrix is given by
+
+![](graphs/mark13.png)
+
+and so the 2-step transition matrix is
+
+![](graphs/mark14.png" >
+
+For example  , P(X~3~=2|X~1~=2) = 7/9 because if X~1~ = 2 the chain could have gone to 1 (with probability 2/3) and then back to 2 (with probability 2/3) or it could have gone to 3 (with probability 1/3) and then back to 2 (with probability 1), so we have 
+
+$P(X_3=2|X_1=2) = 2/3*2/3 + 1/3*1 = 7/9$
+
+#### **Example (Umbrellas)**
+
+Finding P^2^ for solution 1 (in this generality) is difficult, but for solution 2 we have
+
+![](graphs/mark128.png)
+
+### Eigenvalues and Eigenvectors
+
+In order to find P^(n)^ we could just find PPP..P n-times. With a little linear algebra this becomes easier: For many matrices P there exists a matrix U and a diagonal matrix D such that P=UDU^-1^. Here is how to find U and D:
+  
+First we need to find the eigenvalues of the matrix P, that is we need to find the solutions of the equations $Px=\lambda x$. This is equivalent to $(P-\lambda I)x=0$ or to $\det(P-\lambda I)=0$. So we have:
+
+![](graphs/mark16.png)
+
+The D above now is the matrix with the eigenvalues on the diagonal. The columns of the matrix U are the corresponding eigenvectors (with Euclidean length 1), so for example 
+
+![](graphs/mark17.png)
+
+Of course we have $\det(P-\lambda I)=0$, so this system is does not have a unique solution. Setting x~1~ =1 we can then easily find a solution x=(1,-1,1,-1).
+  
+This vector has Euclidean length $\sqrt{(1^2+(-1)^2+1^2+(-1)^2)} = 2$, so the normalized eigenvector is x=(1/2,-1/2,1/2,-1/2)
+  
+Similarly we can find eigenvectors for the other eigenvalues. 
+  
+Why does this help in computing P^(n)? It turns out that we have
+
+P^(2)^ = PP = UDU^-1^UDU^-1^ = UDDU^-1^ = UD^2^U^-1^ and 
+
+![](graphs/mark18.png)
+
+and in general we have P^(n)^ = UD^n^U^-1^.
+
+Note 
+
+![](graphs/mark131.png)
+
+so $\lambda=1$ is always an eigenvalue of a transition matrix P, with (unnormalized) eigenvector (1,1,..,1)^T^.
+
+#### **Example (Umbrella)**
+
+solution 2 and r=2, then
+
+![](graphs/mark129.png) 
+
+and in this generality that's about it
+ 
+`r hl()$hr()` 
+
+An important consequence of the Markov property is the fact that given the present the past and the future are independent. This is formalized in the 
+
+**Theorem (Chapman-Kolmogorov equation)**
+
+Let $\{X_n ,n \ge 0\}$ be a Markov chain. Let x,y,z be in the state space, then 
+
+![](graphs/mark15.png)
+
+**proof**
+
+is an immediate consequence of the law of total probability and the Markov property. 
+
+### Classification of States
+
+There are a number of properties a Markov chains may or may not have. Here are some:
+
+**Definition**
+
+A Markov chain is said to be *irreducible* if for each pair of states i and j there is a positive probability that starting in state i the chain will eventually move to state j.
+
+#### **Example** 
+
+Both the two random walks, the Ehrenfest chain and the Umbrella chains are irreducible.
+
+#### ** Example (Casino)**
+
+Consider the following chain: you go to the Casino with \$10. You play Blackjack, always betting \$5. Let X~n~  be your "wealth" after the n^th^ game. Then X~n~  is in \{0,5,10,15,..\} and 
+
+$P(X_{n+k}  = j|X_k =0) = 0$ for all n > 1. 
+
+("0" is called a coffin or absorbing state). So this chain is not irreducible.
+
+**Definition**
+
+A Markov chain is said to be *aperiodic* if for some $n \ge 0$ and some state j we have
+  
+$P(X_n  = j|X_0 =j) > 0$ and $P(X_n+1  = j|X_0 =j) > 0$
+
+In other words there should be a chance to return to state j in either n steps or in n+1 steps.
+
+#### **Example** 
+
+Random walk I, the Ehrenfest chain and the Umbrella chain are not aperiodic because it is only possible to return to the same state in an even number of steps, but not an odd number. Random Walk II is aperiodic.
+
+**Definition**
+
+A state x of a Markov chain is said to be *recurrent* if P(the chain returns to x infinitely often) = 1. A Markov chain is called recurrent if all its states are recurrent. A state that is not recurrent is called *transient*.
+  
+A recurrent state i is said to be *positive recurrent* if starting at i the expected time until the return to i is finite, otherwise it is called *null recurrent*.
+
+**Theorem**
+
+In a finite-state chain all recurrent states are positive recurrent. 
+**proof** 
+
+Say S=\{x~1~ ,..,x~m~ \} and assume (wlog) \{x~1~ ,..,x~k~ \} are recurrent. Then for any $i \ne j, i,j \le m$
+
+$P(X_n =x_i |X_0 =x_j  )>0$
+
+because x_i  is recurrent, so we have to be able to get there infinitely often no matter where we start. Therefore any recurrent state is reachable from any other recurrent state.
+
+Assume that there is no positive recurrent state. Then all states are either transient or null recurrent. So the expected return time to all the states is infinite. But there are only finitely many states, so this is impossible. Therefore there has to be at least one positive-recurrent state. 
+
+Say x is a positive-recurrent state, and y is recurrent. Then 
+
+![](graphs/mark141.png)
+
+![](graphs/mark142.png)
+
+and so y is positive recurrent 
+
+#### **Example** 
+
+The Ehrenfest chain and the Umbrella chains are clearly poitive recurrent. In the Casino  example  "0" is a recurrent state, the others are not. 
+
+Are the random walks recurrent? Good question! It seems clear that the asymmetric r.v. is not (if $p \ne 0.5$), because eventually one expects the walk to run off to infinity (or - infinity). How about Random Walk I? Actually let's consider a more general problem:
+
+
+#### **Example (Random Walk III)**
+
+let the state space be the lattice of integers on $\mathbb{R}^d$, that is X~n~  =(i~1~ , .., i~d~ ) for i~k~  any integer. Then the chain goes from one point on the lattice to any of the 2d points that differ by one in one coordinate with probability 1/2d.
+  
+One of the great results in probability states:
+
+**Theorem**
+
+The simple random walk is recurrent if $d \le 2$, transient otherwise
+
+or as Kakutani once said "A drunk man will find his way home but a drunk bird may get lost".
+
+**Definition**
+
+Positive recurrent aperiodic states are called *ergodic*.
+
+### Stationary Distribution
+
+Until now we started the chain at time 0 in some specified state j. Let's consider what happens if we choose that state according to some distribution $\pi$:
+
+![](graphs/mark146.png)
+
+and clearly an interesting case is if the probability to be in a certain state does not change, that is if 
+
+$\pi^T P= \pi^T$
+
+Note: 
+
+$\pi^TP^{(n)} = \pi ^T P P^{(n-1)} = \pi^T P^{(n-1)} = ... = \pi^T$
+
+so this immediately implies that the probability for the chain to be in state k is always $\pi_k$. 
+
+With this idea we have the 
+
+**Definition**
+
+Let S be the state space of a Markov chain X with transition matrix P. Let $\pi$ be a "measure" on S. Then $\pi$ is called a
+*stationary measure* of X if $\pi^TP=\pi^T$.
+
+We won't discuss exactly what it means for $\pi$ to be a "measure". You can think of it in the same way as a probability distribution, only that we don't have $\sum \pi_i =1$.
+
+Note: 
+
+$\pi^TP=\pi^T$ iff 
+$(P^T\pi)^T=\pi^T$ iff  
+$P^T\pi=\pi$ iff  
+$(P^T-I)\pi=0$
+
+so again this leads to a system of equations is singular. Often we can get a unique solution by requiring that $\pi$ be a proper probability distribution, that is that $\sum \pi_i  = 1$.
+
+The interpretation is the following: Say we choose the initial state X~0~  according to $\pi$, that is $P(X_0 =i) = \pi_i$. Then $\pi_i$  is the long-run proportion of time the chain visits  state i, that is 
+
+$\pi_i  = \lim \frac1N \sum^N_{k=1}  I[X_i =i]$
+
+There  is an extension of the WLLN to Markov chains. That is, say h is a function on the state space, then
+
+![](graphs/mark19.png)
+
+where Z is a r.v. with pdf $\pi$. 
+
+One of the main results for Markov chains is the following:
+
+###Theorem 
+
+If the Markov chain \{X~n~ \} is irreducible and ergodic, then
+
+![](graphs/mark110.png)
+
+**proof** omitted 
+
+#### **Example (Ehrenfest chain)**
+
+To find a (?) stationary measure we have to solve the system of equations
+
+$\pi^TP=\pi^T$
+
+Let's start with the case r=3:
+
+![](graphs/mark147.png)
+  
+Here this means the system
+
+$\pi_0  = 1/3 \pi_1$  
+$\pi_1  = \pi_0 +2/3\pi_2$  
+$\pi_2  = 2/3 \pi_1  +  \pi_3$  
+$\pi_3  = 1/3\pi_2$  
+$\pi_0  + \pi_1  + \pi_2  + \pi_3  = 1$
+
+and so 
+$\pi = (1/8,3/8,3/8,1/8)$
+
+Before doing the general case it is often a good idea to do a specific case that has all the "parts" (ie equations), so let's do next r=5: 
+
+First the transition matrix:
+
+![](graphs/mark148.png)
+
+and now the equations: 
+
+![](graphs/mark149.png)
+
+Finally, for the general case: 
+
+![](graphs/mark150.png)
+
+#### **Example (Umbrellas)**
+
+For solution 1 the system of equations is
+
+![](graphs/mark132.png)
+
+and so on shows x=c(q,1,..,1) solves the system. Now q+1+..+1=q+r, so the stationary distribution is $\pi_0 =q/(q+r), \pi_i =1/(q+r) i=1,..,r$.
+
+For solution 2 we have 
+
+![](graphs/mark133.png)
+
+and we see that we get the same stationary distribution as in solution 1.
+
+So, what percentage of times do you get wet? Clearly this is 
+
+P(no umbrella and it rains) = $q\pi_0 =q^2/(q+r)$
+
+#### **Example (Random Walk)**
+
+Let S be the integers and define a Markov chain by p~i,i+1~  = p and p~i,i-1~  = q = 1-p. A stationary measure is given by $\pi_i =1$ for all i because $(\pi P)_i  = 1p+1q = 1$.
+
+Now assume $p\ne q$ and define $\pi_i  =(p/q)^i$. Then
+
+![](graphs/mark111.png)
+
+Note that this shows that stationary measure are not unique.
+
+`r hl()$hr()`
+
+Here is another property of Markov chains: A Markov chain is said to be *time-reversible* if 
+
+$\pi_i P_{ij} =\pi_j P_{ji}$
+
+for all $i\ne j$. It can be shown that for a time reversible Markov chain if the chain is started from $\pi$ and run backwards in time it again has transition matrix P. 
+
+#### **Example**
+
+The Ehrenfest chain is time-reversible. We will show this for the case i=k, j=k+1: 
+
+![](graphs/mark113.png)
+
+### The Gambler's Ruin Problem
+
+Suppose you go to the casino and repeatedly play a game where you win and double your "bet" with probability p and loose with probability q=1-p. For example, if you play roulette and always place your bet on "red" we have p=18/38.
+
+Suppose you go in with the following plan: you have \$i to start, you always bet \$1 in each round and you stay until you either lost all your money or until you have reached \$N. What is the probability of reaching \$N before going broke?
+
+If we let X~n~  denote your "fortune" after n rounds $\{X_n \}$ is a Markov chain on \{0,1,..,N\} with transition probabilities
+
+p~00~ =p~NN~ =1   
+p~i,i+1~ =p  
+p~i,i-1~ =q 
+
+for i in \{1,..,N-1\}
+
+Also we X~0~ =i.
+
+Let P~i~  denote the probability that, starting at i the fortune will eventually reach N. We have:
+
+![](graphs/mark114.png)
+
+Note that P~N~ =1 and that the formula above also holds for i=N, so we have
+
+![](graphs/mark115.png)
+
+The main "trick" in this calculation was to condition on the "right" event (here X~1~). This is often the case when doing math with Markov chains.
+
+
+Say in our  example  playing roulette you start with \$100. What is the probability of reaching N before going broke? We find
+
+![](graphs/mark140.png)
+
+Is it the same probability to start with \$100 and reach \$110 or to start with \$200 and reach \$220? The answer is no, P~220~ =0.12 for i=100. 
+
+#### **Example (two-state process)**
+
+Here X~n~  takes only two possible states, coded as 0 and 1. Therefore the transition matrix is given by
+
+![](graphs/mark135.png)
+
+Now
+
+![](graphs/mark136.png)
+
+For the stationary distribution we find
+
+![](graphs/mark137.png)
+
+Finally
+
+![](graphs/mark138.png)

@@ -1,0 +1,464 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  html_document: default
+  pdf_document:
+    fig_caption: no
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+## The Normal (Gaussian) Distribution
+
+### Normal Distribution
+
+X is said to have a normal distribution with mean $\mu$ and variance $\sigma$^2 ($X \sim N(\mu,\sigma)$) if it has density
+
+$$f(x)=\frac1{\sqrt{2\pi \sigma^2}}\exp\left\{\frac1{2\sigma^2}(x-\mu)^2 \right\}$$
+
+
+If $\mu=0$ and $\sigma=1$ it is called a standard normal, and often denoted by Z instead of X.
+  
+**Careful**: some papers and textbooks define the normal as $X  \sim  N( \mu , \sigma^2)$, that is they use the variance instead of the standard deviation.
+
+**Theorem**
+
+a.  $Z  \sim  N(0,1)$ then $X= \mu + \sigma Z  \sim  N( \mu , \sigma )$
+
+b.  $X  \sim  N( \mu , \sigma )$, then $Z=(x- \mu )/ \sigma   \sim  N(0,1)$
+
+**proof**
+
+![](graphs/cont16.png)
+
+one consequence of this theorem is that we can often do a proof for the standard normal, and then quickly generalize it to all normals.
+
+**Theorem** 
+
+show that the function above is indeed a pdf for all $\mu$ and $\sigma >0$.
+
+**proof**
+  
+-  $f(x) \ge 0$ for all $x$
+  
+- first we show this for a standard normal:
+ 
+![](graphs/cont17.png)
+
+the change of variables above is of course called the change to *polar coordinates*.
+  
+the general case now follows easily:
+
+$$
+\begin{aligned}
+&P(- \infty <X< \infty )    = \\
+&P(- \infty <(X- \mu )/ \sigma < \infty )    = \\
+&P(- \infty <Z< \infty ) = 1  
+\end{aligned}
+$$  
+    
+#### **Example** 
+
+we previously said that $\Gamma (1/2)=\sqrt{\pi}$. Here is a proof that uses the standard normal distribution:
+
+![](graphs/cont26.png) 
+
+**Theorem**
+
+Say $X  \sim  N( \mu , \sigma )$ then 
+  
+1.  $E[X]= \mu$ and $Var(X)= \sigma^2$    
+2.  $\psi(t)=\exp( \mu t+ \sigma^2t^2/2)$  
+3)  $P(X> \mu ) = P(X< \mu ) =1/2$ and $P(X> \mu +x) = P(X< \mu -x)$  
+4) 
+
+![](graphs/cont9.png)
+
+
+**proof**
+
+1. 
+
+![](graphs/cont18.png)
+
+2.
+
+Let Z be a standard normal, then
+
+![](graphs/norm1.png)
+
+now let $X  \sim  N( \mu , \sigma )$, then 
+
+$$
+\begin{aligned}
+&\psi _X (t) = \\
+&E[\exp(tX)] = \\
+&E[\exp(t( \mu + \sigma Z)] = \\
+&E[\exp( \mu t+ \sigma tZ)] = \\
+&E[\exp( \mu t)\exp( \sigma tZ)] =  \\
+&\exp( \mu t)E[\exp( \sigma tZ)] =\\
+&\exp( \mu t) \psi _Z ( \sigma t) = \\
+&\exp( \mu t) \exp(( \sigma t)^2/2) = \\
+&\exp( \mu t+ \sigma ^2t^2/2)
+\end{aligned}
+$$
+
+3.  first we show $P(X> \mu +x) = P(X< \mu -x)$:
+
+![](graphs/norm15.png)
+
+now with x=0 it follows that 
+
+$P(X> \mu ) = P(X< \mu ) = 1-P(X> \mu )$, and so $P(X> \mu ) = 1/2$.
+
+4. 
+
+![](graphs/norm16.png)
+
+and this last integral requires numerical integration because the cdf of a normal does not exist explicitly. At least we have shown that the probabilities are independent of $\mu$ and $\sigma$.
+
+#### **Example** 
+
+We have seen before that the Cauchy rv. has very thick tails, that is the probabilities P(X>t) are large. On the other hand the normal distribution has very thin tails. There is also a distribution that is somewhat in between, called the t distribution with n degrees of freedom. It has density
+
+![](graphs/norm2.png)
+
+For n=1 this is the Cauchy, as $n \rightarrow \infty$  it approaches the standard normal 
+
+**Theorem**
+
+Say $X  \sim  N( \mu , \sigma ), Y  \sim  N(\nu, \tau )$ and X and Y are independent. Then X+Y and X-Y are also normal.
+
+**proof**
+$$
+\begin{aligned}
+&\psi _{X+Y} (t) = \\
+&\psi _X (t) \psi _Y (t) = \\
+&\exp( \mu t+ \sigma ^2t^2/2) \exp(\nu t+ \tau ^2t^2/2) = \\
+&\exp(( \mu +\nu)t+( \sigma ^2+ \tau ^2)t^2/2) 
+\end{aligned}
+$$
+and so $X+Y  \sim  N( \mu +\nu, \sigma ^2+ \tau ^2)$ 
+
+$$
+\begin{aligned}
+&\psi _{-Y} (t) = \\
+&E[\exp(t[-Y])] = \\
+&E[\exp((-t)Y)] = \\
+&\exp(\nu(-t)+ \tau ^2(-t)^2/2) =\\
+&\exp(-\nu t+ \tau ^2t^2/2) = \\
+\end{aligned}
+$$
+
+and so $-Y  \sim  N(-\nu, \tau ^2)$
+
+finally $X-Y  \sim  N( \mu -\nu, \sigma ^2+ \tau ^2)$
+
+`
+<hr>`r hl()$hr()`
+
+Because of the importance of the normal distribution a number of theorems have been found to characterize it. Here is one such result: 
+
+**Theorem (Bernstein)**
+
+If $X\perp Y$ and $X + Y \perp X-Y$, then X and Y are normal. 
+
+**proof**
+
+We will do this proof through a couple of lemmas:
+
+**Lemma **
+
+If X and Y are iid normal, then X+Y and X-Y are also independent normal we have just shown that X+Y and X-Y are normal. Now 
+
+Cov(X-Y,X+Y) =  
+Cov(X,X) + Cov(X,Y) + Cov(-Y,X) + Cov(-Y,Y) =  
+Var(X) + Cov(X,Y) - Cov(Y,X) -Var(Y) = 0
+
+and as we shall see in a little bit this implies X-Y and X+Y are independent. 
+
+**Lemma **
+
+If X and Z are independent such that Z and X+Z are normal, then X is normal as well because 
+
+![](graphs/norm3.png)
+  
+so the mgf of X is of the form 
+
+$\psi (t) = \exp\{ \mu t+\frac12 \tau t^2\}$
+
+so $X  \sim  N( \mu ,\sqrt \tau )$ 
+
+**Lemma **
+
+If X, Z are independent random variables and Z is normal, then X+Z has a non-vanishing probability density function which has derivatives of all orders.
+
+wlog assume $Z  \sim  N(0,1/\sqrt 2)$. Consider
+
+$f(x) = E[\exp(-(x-X)^2]$
+
+Then $f(x) \ne 0$ for each x because exp(-(x-X)^2^>0. Moreover all derivatives exist and are bounded uniformly ( x^k^exp(-x^2^)  has a finite minimum and maximum for all k), and therefore f has derivatives of all orders.
+
+Now
+
+![](graphs/norm4.png)
+so f is the density of X+Z.
+
+Now for the finish of Bernstein's theorem: First we change notation and use rv's X~1~  and X~2~ . So we know X~1~  and X~2~ 
+are independent and so are X~1~ +X~2~  and X~1~ -X~2`.
+
+Let Z~1~  and Z~2~  be iid normal rv's, independent of X~1~  and X~2~. Then define rv's
+
+Y~k~  = X~k~  +Z~k~ 
+
+By the third lemma each of the Y~k~'s have a smooth non-zero pdf. 
+
+The joint density of the (Y~1~ +Y~2~,  Y~1~ -Y~2~ ) is 
+
+![](graphs/norm5.png)
+
+and because Y~1~ +Y~2~  and Y~1~ -Y~2~  are independent by assumption this factors into two functions, one of x and the other of y, say a(x) and b(y).
+
+Consider the functions
+
+Q~k~ (x) =  log(f~k~ (x))
+
+then the Q's are twice differentiable and we have
+
+$$
+\begin{aligned}
+&Q_1 (x+y)+Q_2 (x-y) =  \\
+&\log(f_1 (x+y))+log(f_2 (x-y)) =\\
+&\log(f_1 (x+y)f_2 (x-y)) =\\
+&\log (2a(2x)b(2y)) =\\
+&\log 2+\log a(2x) + \log b(2y)
+\end{aligned}
+$$
+
+so
+
+$$
+\begin{aligned}
+&\frac{d}{dx}\{Q_1 (x+y)+Q_2 (x-y)\}  = \\
+&\frac{d}{dx}\{\log 2+ \log a(2x) + \log b(2y)\} = \\
+&\frac{d}{dx}\{\log a(2x)\} \\
+&\frac{d^2}{dxdy}\{Q_1 (x+y)+Q_2 (x-y)\}  = \\
+&\frac{d}{dy}\frac{d}{dx}\{\log a(2x)\}) = 0
+\end{aligned}
+$$
+but also
+
+$\frac{d^2}{dxdy}\{Q_1 (x+y)+Q_2 (x-y)\} = Q''_1 (x+y)-Q''_2 (x-y)$
+
+and so 
+
+$Q''_1 (x+y) = Q''_2 (x-y)$
+
+taking x=y we have 
+
+$Q''_1 (2x) = Q''_2 (0) =$ const 
+
+and taking x=-y we have 
+
+$Q''_2 (2y) = Q''_1 (0) =$ const 
+
+so
+
+$Q_k (x) = a_k x^2+b_k x+c_k$ 
+
+and 
+
+$f_k (x) = \exp(a_k x^2+b_k x+c_k )$
+
+as a pdf f~k~  has to be integrable, so $a_k <0$, and by integrating f~k~  over R we find $c_k =-\frac12 \log(2 \pi  a_k )$. Therefore f~k~  is a normal density, and so Y~1~  and Y~2~  are normal. 
+
+Now Y~1~  and Y~2~   are iid normal and the independence of Y~1~ +Y~2~  and Y~1~ -Y~2`  follows from the first lemma.
+
+The theorem then follows from the second lemma.
+
+### Bivariate Normal RV
+
+**Definition**
+
+Let $\mu _1 ,  \mu _2  \in \mathbb{R}$,  $\sigma _1 , \sigma _2  \in \mathbb{R}^+$ and $\rho   \in [-1,1]$, then the random vector (X,Y) is said to have a bivariate normal distribution if
+
+![](graphs/norm6.png)
+
+**Theorem**
+
+a.  Let (X,Y) be a bivariate normal. Let $U=(X-  \mu _1 )/ \sigma _1$  and $V=(Y-  \mu _2 )/ \sigma _2$.  Then (U,V) is a bivariate normal random vector with 
+
+$\mu _U  =  \mu _V  = 0,  \sigma _U  =  \sigma _V  = 1$ and  $\rho _{UV}  =  \rho$
+
+b.  Let (U,V) be a bivariate normal random vector with $\mu _U  =  \mu _V  = 0,  \sigma _U  =  \sigma _V  = 1$. Let $X= \mu _1 + \sigma _1 U$ and $Y= \mu _2 + \sigma _2 V$. Then (X,Y) a bivariate normal with parameters  $\mu _1 ,  \mu _2 , \sigma _1 , \sigma _2$ and  $\rho$
+
+**proof** 
+
+follows from a simple application of the transformation theorem 
+
+**Theorem**
+
+Let (X,Y) be a bivariate normal. Then $X  \sim  N( \mu _1 , \sigma _1 )$.
+
+**proof** 
+
+we will do this under the assumption  $\mu _1 = \mu _2 =0$ and  $\sigma _1 = \sigma _2 =1$. The proof of the general case is exactly the same, only the arithmetic is a bit ugly.
+
+![](graphs/norm7.png)
+
+**Theorem**
+ 
+Let (X,Y) be a bivariate normal. Then Cor(x,y) = $\rho$.
+
+**proof** 
+
+again we will do this under the assumption $\mu _1 = \mu _2 =0$ and  $\sigma _1 = \sigma _2 =1$. 
+
+We already have E[X]=E[Y]=0. Now 
+
+![](graphs/norm8.png)
+
+and so Cor(X,Y) = Cov(X,Y)/[sd(X)sd(Y)] = E[XY] =  $\rho$. 
+
+**Theorem**
+
+let X and Y be two normal rv's, then 
+
+$X\perp Y$ iff Cor(X,Y)=0
+    
+**proof** 
+
+one direction is always true. For the other we have if $\rho =0$
+
+![](graphs/cont22.png) 
+
+#### **Example** 
+
+the joint distribution of two normal rv's need not be bivariate normal
+  
+Say $X  \sim  N(0,1)$ and let Y=-X is |X|>1 and Y=X if |X| < 1, then
+
+![](graphs/cont23.png)
+
+so $Y  \sim  N(0,1)$ as well, but for example f(-2,-2)=0.
+
+**Theorem**
+
+say (X,Y) is a bivariate normal rv, then 
+    
+a.  $Z = X + Y   \sim   N( \mu _1 + \mu _2 ,\sqrt{ \sigma _1 ^2+ \sigma _2 ^2+2 \sigma _1  \sigma _1  \rho }))$
+  
+b.  $Z = X|Y=y   \sim   N( \mu _1 - \rho ( \sigma _1 / \sigma _1 )(y- \mu _2 ),  \sigma _1 \sqrt{1- \rho ^2)})$
+
+**proof**
+
+a.  is obvious: if (X,Y) is a bivariate normal rv, then $X  \sim N( \mu _1 , \sigma _1 ), Y  \sim  N( \mu _2 , \sigma _2 )$ and Cor(x,y)=$\rho$. Therefore
+
+X+Y has a normal distribution, E[X+Y] =  $\mu _1 + \mu _2$  and
+Var(X+Y) = Var(X)+Var(Y)+2Cov(X,Y) =  $\sigma _1 ^2+ \sigma _2 ^2+2 \sigma _1  \sigma _2  \rho$.
+
+b.  assume $\mu _1 = \mu _2 =0$ and  $\sigma _1 = \sigma _2 =1$, then
+
+![](graphs/norm9.png)
+
+and so $X|Y=y  \sim  N( \rho y,\sqrt{1- \rho ^2})$  
+
+### Multivariate Normal RV
+
+Let $\mathbf{\mu}=( \mu _1 ,.., \mu _n )^T$ be a vector and $\Sigma =[ \sigma _{ij} ]$ be a symmetric positive semi-definite matrix (ie $x^T \Sigma x \ge 0$ for all x), then the random vector 
+
+$\mathbf{X} = (X_1 ,..,X_n )^T$ 
+
+has a multivariate normal distribution if it has joint density
+
+![](graphs/cont20.png)
+
+where $|\Sigma|$ is the determinant of $\Sigma$.
+
+#### **Example** 
+
+n=1 
+
+$\Sigma=[a]$,  $x^T \Sigma x = ax^2  \ge  0$ iff $a \ge 0$ 
+
+$|\Sigma|=a, \Sigma^{-1}=1/a$, and 
+
+![](graphs/norm12.png)
+
+so a is the variance of X. 
+
+#### **Example ** 
+
+n=2: we have a symmetric 2x2 matrix $\Sigma$
+
+![](graphs/norm13.png)
+
+then we want
+
+![](graphs/norm14.png)
+
+so in order for $\Sigma$ to be positive semidefinite we need $a,c \ge 0$  and $|d| = |b/\sqrt{ac}| \le 1$ or $|b| \le \sqrt{ac}$.
+
+Inspired by the above calculation let's write  $\Sigma$ as follows: 
+
+![](graphs/cont21.png)
+  
+Note that this is just as general as before, with $a= \sigma _x ^2$ , $c= \sigma _y ^2$  and $b= \rho  \sigma _x  \sigma _y$. Then
+
+![](graphs/norm10.png)
+
+so we have a bivariate normal.
+
+**Theorem**
+
+Say $\mathbf{X}$ has a multivariate normal distribution. Then 
+
+$\mathbf{Z} = ( (X_1 - \mu _1 )/ \sigma _{11}  ,.., (X_n - \mu _n )/ \sigma _{nn}  )^T$ 
+
+has a multivariate normal distribution with mean vector **$\mu$**=(0,..,0)^T^ and variance-covariance matrix diag[ $\sigma _{ij}$ ]. Then  
+
+$X_i   \sim  N( \mu _i , \sigma _{ii} )$ 
+
+b.  $cov(X_i ,X_j ) =  \sigma _{ij}$ 
+  
+**without proof**
+
+We  have the following characterization of a multivariate normal distribution, in some ways a generalization of Bernstein's theorem:
+
+**Theorem**
+  
+Let **X**=(X~1~ ,..,X~n~ )^T^. Then **X** has a multivariate normal distribution if and only if every linear combination $t_1 X_1 +..+t_n X_n$  has a normal distribution.
+
+**proof** 
+
+one direction is obvious because the marginals of a multivariate rv are normal and the sum of normals is normal. The other direction can be shown using mgf's, where the mgf M of **X** is given by
+
+![](graphs/cont24.png)
+
+### Theory of Errors
+
+In real life almost any measuring device makes some errors. Some instruments are lousy and make big ones, other instruments are excellent and make small ones.
+Example
+
+You want to measure the length a certain streetlight is red. You ask 10 friends to go with you and everyone makes a guess.
+Example
+
+You want to measure the length a certain streetlight is red. You ask 10 friends to go with you. You have a stopwatch that you give to each friend.
+
+Clearly in the second case we expect to get much smaller errors.
+
+Around 1800 Karl Friedrich Gauss was thinking about what one could say in great generality about such measurement errors. He came up with the following rules that (almost) all measurement errors should follow, no matter what the instrument:
+
+-    Small errors are more likely than large errors.
+
+-    an error of $\epsilon$ is just as likely as an error of $-\epsilon$
+
+-    In the presence of several measurements of the same quantity, the most likely value of the quantity being measured is their average.
+
+Now it is quite astonishing that JUST FROM THESE THREE rules he was able to derive the normal distibution!

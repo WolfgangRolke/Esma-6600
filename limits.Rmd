@@ -1,0 +1,401 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+## Limit Theorems
+
+### Convergence Concepts
+
+Say we have a sequence of numbers a~n~ . Then there is just one definition of a "limit", namely 
+
+$a_n \rightarrow a$ iff for every $\epsilon >0$ there exists an $n_\epsilon$  such that $|a_n -a|<\epsilon$ for all $n>n_\epsilon$. 
+
+#### **Example** 
+
+say $a_n =(1+1/n)^n$. Show that $a_n \rightarrow e$
+
+Fix n, and let t be such that $1 \le t \le 1+1/n$. Then 
+
+![](graphs/limits23.png)
+
+so fix an $\epsilon >0$. Then if $n>e/\epsilon-1$ we have
+
+$|(1+1/n)^n-e|<\epsilon$
+
+and therefore 
+
+$(1+1/n)^n\rightarrow e$
+  
+`r hl()$hr()`
+
+Things already get a little more complicated if we go to sequences of functions. Here there are two ways in which they can converge:
+
+-  **Pointwise Convergence:** $f_n (x)\rightarrow f(x)$ pointwise iff for every x in S and every $\epsilon >0$ there exists an $n_{\epsilon,x}$  such that $|f_n (x)-f(x)|<\epsilon$ for all $n>n_{\epsilon,x}$. 
+
+-  **Uniform Convergence:** $f_n (x)\rightarrow f(x)$ pointwise iff for every x in S and every $\epsilon >0$ there exists an $n_{\epsilon}$  such that $|f_n (x)-f(x)|<\epsilon$ for all $n>n_{\epsilon}$. 
+
+and there is a simple hierarchy: uniform convergence implies pointwise convergence but not vice versa.
+
+#### **Example** 
+
+say $f_n (x)=1+x/n, x \in S=[A,B]$ where A<B, f(x)=1, then $f_n (x)\rightarrow f(x)$  uniformly.
+
+$|f_n (x)-f(x)| = |1+x/n-1| =$  
+$|x/n| \le \max(|A|,|B|)/n < \epsilon$ 
+
+if $n \ge \max(|A|,|B|)/\epsilon$ 
+
+#### **Example** 
+
+say $f_n (x)=x^n , S=[0,1], f(x)=I_{1} (x)$, then $f_n (x)\rightarrow f(x)$ pointwise but not uniformly.
+
+say x<1 then  $|f_n (x)-f(x)| = x^n < \epsilon$ for all $n > n_{\epsilon,x}  = \log(\epsilon)/\log(x)$.
+
+say x=1 then $|f_n (x)-f(x)| = 0 < \epsilon$ for all $n > n_{\epsilon,x}  = 1$
+
+but
+
+![](graphs/limits8.png)
+
+`r hl()$hr()`
+
+Now when we go to probabilities it gets a bit more complicated still. Say we have a sequence of rv's X~n~  with means $\mu_n$  and cdf's F~n~ , and a rv X with mean $\mu$ and cdf F. Then we have:
+
+**Definition**
+
+-  **Convergence in Mean: ** $X_n \rightarrow X$ in mean iff $\mu_n \rightarrow \mu$.
+
+-  **Convergence in Quadratic Mean: ** $X_n \rightarrow \mu$ in quadratic mean iff $E[X_n ]\rightarrow \mu$ and $Var(X_n )\rightarrow 0$.
+
+-  **Convergence in L^p: ** $X_n \rightarrow X$ in L^p^ iff $E[|X_n -X|^p]\rightarrow 0$.  
+
+-  **Convergence in Distribution (Law)** $X_n \rightarrow X$ in law iff $F_n (x)\rightarrow F(x)$ pointwise for all x where F is continuous.  
+
+-  **Convergence in Probability: ** $X_n \rightarrow X$ in probability iff for every $\epsilon >0 \lim_{n\rightarrow \infty} P(|X_n -X| \ge \epsilon )=0$. 
+
+-  **Almost Sure Convergence: ** $X_n \rightarrow X$ almost surely iff for every $\epsilon >0$ $P(\lim_{n\rightarrow \infty} |X_n -X|< \epsilon )=1$.
+
+#### **Example** 
+
+Let X~n~  have density $f_n (x)=nx^{n-1}, 0<x<1$ and let X be such that P(X=1)=1. Then
+ 
+![](graphs/limits11.png)
+ 
+![](graphs/limits9.png)
+
+![](graphs/limits24.png)
+
+so $X_n \rightarrow X$ in all the ways possible.
+
+#### **Example** 
+
+Say X~n~  has density $f(x)=n/(n+1) x^{1/n}, 0<x<1$ and $X \sim$ U[0,1]. Then
+
+![](graphs/limits21a.png)
+
+so $Var[X_n ]\rightarrow 1/3-(1/2)^2 = 1/12 \ne 0$, so we don't have convergence in quadratic mean. We do have convergence in distribution, though:
+
+![](graphs/limits21.png)
+
+How about convergence in probability? As stated here that can not be decided because we would need the joint density of X~n~  and X. If they are independent X~n~  will not converge to X in probability: 
+
+![](graphs/limits22.png)
+
+### Relationships between Convergences 
+
+Unfortunately there is no simple hierarchy between the different modes of convergence. Here are some relationships:
+
+**Theorem**
+
+a. convergence in quadratic mean implies convergence in probability.
+
+b. convergence in probability implies convergence in distribution.   The reverse is true if the limit is a constant.
+  
+c. almost sure convergence implies convergence in probability, but not vice versa.
+
+**proof:**
+
+a. convergence in quadratic mean implies that the limit is a constant, say $\mu$. Then 
+
+![](graphs/limits12.png)
+
+b. say $X_n \rightarrow X$ in probability. We will do the proof in the case where say X~n~  and X are continuous r.vs (so we need not worry about terms of the form P(X=x)). Now 
+
+![](graphs/limits14.png)
+
+say $X_n \rightarrow c$ in law, then
+
+![](graphs/limits13.png)  
+
+c.  is done with a counter example: Let $X \sim$ U[0,1] and define 
+
+![](graphs/limits15.png)
+
+and so $Y_n \rightarrow Y$ in probability.
+
+However, for every x in [0,1] Y~n~ (x)=0 infinitely often and Y~n~ (x)=1 infinitely often, therefore Y~n~  does not converge to Y almost surely.
+
+**Theorem**
+
+If $X_n \rightarrow 0$ in L^p^ then $X_n \rightarrow 0$ in probability. 
+
+Note: $X_n \rightarrow X$ iff $X_n -X\rightarrow 0$.
+
+**proof**
+
+Say $X_n \rightarrow 0$ in L^p^, and let g(x)=|x|^p^, then by Chebyshev's inequality
+
+$P(|X_n | \ge \epsilon )  \le  E[|X_n|^p)/ \epsilon ^p \rightarrow 0$
+
+and so $X_n \rightarrow 0$ in probability.
+
+**Theorem (Slutsky)**
+
+Say $X_n \rightarrow X$ in distribution and g is any continuous function, then $g(X_n )\rightarrow g(X)$ in distribution.
+
+**Lemma**
+
+From the above results, it is easy to show that if $X_n \rightarrow  X$ in distribution and  $Y_n \rightarrow c$ in distribution, then 
+
+-  $X_n +Y_n \rightarrow X+c$ in distribution.
+
+-  $X_n Y_n \rightarrow cX$ in distribution  
+
+which is the most common version of Slutsky's theorem.
+
+In loose terms, the theorem states that if a rv converges to a constant, then it essentially behaves as a constant for addition and multiplication.
+
+Note that the condition that Y~n~  converge to a constant is necessary. 
+
+### Almost Sure Convergence
+
+Consider a number $\omega$ in [0,1], and let's write the number using its decimal expansion as
+
+$\omega = 0.x_1 x_2 x_3 ...$ 
+
+Let T~n~  be the set of $\omega$'s with x~n~ >0 and x~m~ =0 for m>n. Then T~n~  has finitely many numbers. Let T be the set of $\omega$'s with a terminating expansion, then 
+
+$T= \cup _n T_n$ 
+
+and so T is countable. If we consider the game: pick a number in [0,1] at random, we therefore have P(T)=0 because the total number of real numbers in [0,1] is uncountable!
+
+Now let k be such that $0 \le k \le 9$, and define $\nu(\omega,n,k)$ to be the number of x~i~'s among the first n digits in the expansion of $\omega$ with x~i~ =k. Define (if it exists) 
+
+![](graphs/limits27.png)
+
+so $\phi_k (\omega)$ is the long run relative frequency of the digit k in the expansion of $\omega$.
+
+Intuitively it seems obvious that $\phi_k (\omega)=1/10$ for all k for "most" $\omega$'s, but is actually very simple to write down numbers for which this is not true: 0.1111..., 0.121212... etc.
+
+Numbers for which $\phi_k (\omega)=1/10$ for all k are called *simply normal*, and how many such numbers there are was an open question in Number Theory for a long time.
+
+**Theorem (Borel)**
+
+Let N be the set of simply normal numbers. Then P(N)=1
+
+**proof (outline)**
+
+Let $\zeta_i$  be a random variable with $P(\zeta_i =k)=1/10$. Let the sequence of $\zeta_i$'s be independent and set
+
+$\omega=0.\zeta_1 \zeta_2 \zeta_3 ...$
+
+Let $S_n  = \zeta_1 +...+\zeta_n$ , then by the strong law of large numbers
+
+$S_n /n\rightarrow 1/10$ almost surely
+
+therefore $P(\phi_k =1/10)=1$ for all k, and finally 
+
+![](graphs/limits28.png) 
+
+`r hl()$hr()`
+
+Considered as a problem in probability theory this seems almost trivial. 100 years ago, though, probability theory was considered a branch of mathematics hardly worthy of the name, and indeed before the advent of modern probability theory in the 1930's it was a strange field of strange results. When Borel published his proof it came as a shock to many mathematicians that this strange field could yield interesting results in the purest of fields, Number Theory.
+
+
+Note that although N has probability 1, N^c is still uncountable. For example, take all the numbers in N and remove all the 0's, then all these numbers are in N^c^, but there are clearly still uncountably many of these! 
+
+
+So, is $\pi-e = 0.423310825131..$ simply normal? Actually there does not exist a mathematical theory even today that would allow us to answer that question easily.
+
+Let's consider the following generalization: Let $k_1 ..k_r$  be a "block" of r consecutive numbers in the expansion of $\omega$, let $\nu(\omega,n,k_1 ..k_r )$ be the number of times the block occurs in $\omega$ up to n and let
+
+$\phi(\omega,k_1 ..k_r ) = lim_{n\rightarrow\infty}  \nu(\omega,n,k_1 ..k_r )/n$
+
+Consider the set $A \in [0,1]$ such that for $\omega \in A$
+$\phi ( \omega,k_1 ..k_r ) = 1/10^r$ for all possible blocks $k_1 ..k_r$.
+
+Now the same reasoning as above shows that P(A)=1.
+
+A number for which this is true not only for any r but also if we change from base 10 to any other base is called *normal*. 
+
+Consider what this to imply: Take your name, "code" it into a string of numbers. Pick a real number $\omega$ at random, then with probability 1 somewhere in the extension of that number you will find your name!
+
+It gets weirder: 
+
+-  you will not find it it just once but over and over again. 
+
+-  let x be any real number and let $\epsilon >0$, then this not only true for the interval [0,1] but also for the interval $[x,x+\epsilon]$
+
+-  It does not matter how large r is! Take the complete works of Shakespeare, they are in there too! 
+
+Is this really true? Our math seems to say yes, but so far no direct prove has been done. 
+
+To read more about normal numbers go here: [Normal Number](https://en.wikipedia.org/wiki/Normal_number)
+
+### Laws of Large Numbers
+
+**Theorem (Weak Law of Large Numbers WLLN)**
+
+Let $X_1 , X_2 , ...$ be a sequence of  independent and identically distributed (iid) r.v.'s having mean $\mu$. Then $\bar{X}$ converges to $\mu$ in probability.
+
+**proof** (assuming in addition that $V(X_i )=\sigma^2 < \infty$)
+
+![](graphs/limits16.png)
+
+so $\bar{X} \rightarrow \mu$ in quadratic mean and therefore in probability.
+
+`r hl()$hr()`
+
+It is best to think of this (and other) limits theorems not as one theorem but as a family of theorems, all with the same conclusion but with different conditions. For example there are weak laws even if the X~n~'s are not independent, don't have the same mean and don't even have finite standard deviations. 
+
+This theorem forms the bases of (almost) all simulation studies: say we want to find a parameter $\theta$ of a population. We can generate data from a random variable X with pdf $f(x|\theta)$ such that $Eh(X) = \theta$. Then by the law of large numbers 
+
+![](graphs/prob56.png)
+
+**Theorem (Strong Law of Large Numbers SLLN)**
+
+Let $X_1 , X_2 , ...$ be a sequence of  independent and identically distributed (iid) r.v.'s having mean $\mu$. Then $\bar{X}$ converges to $\mu$ almost surely.
+
+**proof** needs some measure theory, can be found in most standard textbooks
+
+#### **Example**  
+
+in a game a player rolls 5 fair dice. He then moves his game piece along k fields on a board, where k is the smallest number on the dice + largest number on the dice. For example   if his dice show 2, 2, 3, 5, 5 he moves 2+5 = 7 fields. What is the mean number of fields $\theta$ a player will move?
+
+To do this analytically would be quite an exercise. To do it via simulation is easy. Using R we can this as follows:
+
+```{r}
+x <- matrix(sample(1:6, 
+                   size=5*10^5,
+                   replace=TRUE), nrow=5)
+z <- apply(x, 2, min) + apply(x, 2, max)
+round(mean(z), 1)
+```
+
+
+**Theorem (Weierstrass Approximation Theorem)**
+
+Let f be a continuous function on [0,1], and let $\epsilon >0$. Then there exists a polynomial p such that
+
+$| f(x) - p(x) | < \epsilon$ for all $x\in [0,1]$
+
+Note that this theorem is from real analysis, it has nothing what so ever to do with probability theory. It is actually a special (early) version of one of the most famous theorems in Real Analysis, the Stone-Weierstrass theorem. 
+
+**proof**
+
+We will consider polynomials of the form 
+
+![](graphs/limits36.png)
+
+which are called *Bernstein* polynomials after Sergei Bernstein. Note their connection to the binomial distribution as well as the Beta distribution.
+
+We will show that for any $\epsilon >0$ there exists an $n(\epsilon)$ such that 
+
+$| f(x) - p_{n(\epsilon)}  (x) | < \epsilon$ for all $x \in [0,1]$.
+
+For each x, consider a sequence of Bernoulli trials $\{X_n \}$ with success probability x, and let $S_n  = \sum_{k=1}^n X_k$. We know that $S_n  \sim Bin(n,x)$, so that 
+
+![](graphs/limits37.png)
+
+S~n~  is a sum of independent random variables with a finite variance, so by the weak law of large numbers 
+
+$S_n /n \rightarrow E[f(x)] = f(x)$
+
+in probability, and we have shown pointwise convergence of p_n (x) to f(x). It remains to show uniform convergence. Let $\delta>0$, then
+
+![](graphs/limits38.png)
+
+where (*) follows from the triangle inequality $|a+b| \le |a| + |b|$.
+
+
+Now f is continuous on a compact interval, so f is uniformly continuous. Therefore for any $\epsilon >0$ there exists a $\delta>0$ (independent of x and y ) such if $| x - y | < \delta$ we have $| (f(x) - f(y) | < \epsilon/2$.
+
+With this choice of $\delta$ the second term above is bounded by $\epsilon/2$.
+
+On the other hand again using the triangle inequality and the fact that [0,1] is a compact set we have
+
+$| f(x) - f(y) |  \le  | f(x) |+| -f(y) |  \le$   
+$2\max{|f|,0 \le x \le 1} =: M < \infty$
+
+and so the first term is bounded above by $M P(|S_n /n-x|>\delta)$
+
+Finally we have E[S~n` ]=nx and $Var(S_n ) = nx(1-x) \le n/4$ for $0 \le x \le 1$.
+
+By Chebyshev's inequality we have
+
+$$
+\begin{aligned}
+&P(|S_n /n-x|> \delta )  \le \\
+&Var(S_n )/ \delta ^2    = \\
+& nx(1-x)/( \delta ^2n^2)  \le  \\
+&1/(4 \delta ^2n)\\
+\end{aligned}
+$$
+
+and so we have bounded the first term above as well. 
+
+### Convergence of Series 
+
+Let $\{X_n ; n=1,2,..\}$ be a sequence of random variables. Let $S_n  = X_1 +..+X_n$. What can be said about the convergence of such a series? The most famous result is 
+
+**Theorem (Kolmogorov's Three Series 1929)**
+
+Let $\{X_n \}$ be independent and define for some fixed A>0 a random variable Y~n~ as Y~n~=X~n~ if $|X~n~|\le A$ and 0 otherwise. (Essentially, Y~n~ is X~n~ truncated at $\pm A$).
+
+Then the series $\sum X_n$  converges almost surely if and only if the following three series converge: 
+
+![](graphs/limits31.png)
+
+#### **Example**  
+ 
+As we know 
+
+$\sum 1/n = 1+\frac12 +\frac13 +\frac14 + ... = \infty$ 
+
+and 
+
+$\sum(-1)^{n+1}/n = 1-\frac12 +\frac13 -\frac14 + ... = \log(2) < \infty$.
+
+How about something in between, namely if in each term of the sum we choose -1 with probability p and 1 with probability 1-p? That is let $Z_n  \sim$ Ber(p), and $X_n=(-1)^{Z_n}/n$. 
+
+In the three-series theorem let's take A=1, then $Y_n =X_n$ , and the sum in 1) is 0. 
+
+For 2) we have 
+
+![](graphs/limits33.png)
+
+and so the sum can only converge if p=1/2. To see whether it 
+
+really does we need to check 3):
+
+![](graphs/limits34.png)
+
+and so indeed the sum converges almost surely
+
+#### **Example**
+
+![](graphs/limits35.png)
+
+and so this random sum does not converge almost surely, although the 'fixed-sign" sum $\sum (-1)^n/\sqrt{n}$  does. 

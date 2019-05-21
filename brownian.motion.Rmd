@@ -1,0 +1,207 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  html_document: default
+  pdf_document:
+    fig_caption: no
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+## Brownian Motion and Stationary Processes
+
+In 1827 the English botanist Robert Brown observed that microscopic
+pollen grains suspended in water perform a continual swarming motion.
+
+This phenomenon was first explained by Einstein in 1905 who said the motion comes from the pollen being hit by the molecules in the surrounding water. The mathematical derivation of the Brownian motion process was first done by Wiener in 1918, and in his honor it is often called the Wiener process.
+
+Brownian motion is a continuous-time continuous state-space stochastic process defined as follows: the process $\{X(t),t \ge 0\}$ is a Brownian motion process iff
+
+1.  X(0)=0
+2.  $\{X(t),t \ge 0\}$ has stationary and independent increments
+3.  for all t>0 $X(t) \sim N(0,\sigma \sqrt{t})$
+
+One way to visualize a Brownian motion process is as the limit of symmetric random walks: Let $\{Z_n,n \ge 1\}$ be the symmetric random walk on the integers. If we now speed the process up and scale the jumps accordingly we get a Brownian motion process in the limit. More precisely, suppose we jump every $\delta t$ and make a jump of size $\delta x$. If we let Z(t) denote the position of the process at time t then
+
+![](graphs/mark41.png)
+
+The Brownian motion process plays a role in the theory of stochastic processes similar to the role of the normal distribution in the theory of random variables.
+
+If $\sigma=1$ the process is called standard Brownian motion.
+
+Next we draw sample paths of a standard Brownian motion process.
+
+```{r echo=FALSE}
+B <- 1e3
+t <- seq(0, 10, length=B)
+y <- rep(0, 5*B)
+z <- rep("1", 5*B)
+for(i in 1:5) {
+  y[((i-1)*B+1):(i*B)] <- 
+     cumsum(2*rbinom(B, 1, 0.5)-1)*sqrt(t[2]-t[1])
+  z[((i-1)*B+1):(i*B)] <- paste(i)
+}
+df <- data.frame(x=rep(t, 5), 
+                 y=y,
+                 z=factor(z))
+ggplot(data=df, aes(x, y, color=z)) +
+  geom_line() +
+  theme(legend.position = "None")
+```
+
+```{r echo=FALSE}
+brown <- function (which=1, n=1000) {
+   if (which==1) {
+        par(mfrow = c(2, 2))
+        t <- seq(0, 10, length = n)
+        for (i in 1:4) {
+            X <- cumsum(2 * rbinom(n, 1, 0.5) - 1) * sqrt(t[2] - 
+                t[1])
+            plot(t, X, type = "l", xlab = "t", ylab = "X(t)")
+        }
+    }
+    if (which == 2 || which == 3) {
+        par(mfrow = c(2, 2))
+        t <- matrix(0, n, 4)
+        for (i in 1:4) {
+            t[, i] <- seq(0, 0.1, length = n) * 10^(i - 1)
+            X <- cumsum(2 * rbinom(n, 1, 0.5) - 1) * sqrt(t[2, 
+                i] - t[1, i])
+            if (which == 2) {
+                plot(t[, i], X, type = "l", xlab = "t", 
+                  ylab = "X(t)", axes = F)
+                box()
+            }
+            else {
+                plot(t[, i], X, type = "l", xlab = "t", 
+                  ylab = "X(t)")
+            }
+        }
+    }
+    
+}
+```
+
+Here are some properties of Brownian motion:
+
+1.  BM will eventually hit any and every real value, no matter how large or how negative! It may be a million units above the axis, but it will (with probability 1) be back down again to 0, by some later time.
+
+2.  Once BM hits zero (or any particular value), it immediately hits it again infinitely often, and then again from time to time in the future.
+
+3.  Spatial Homogeneity: B(t) + x for any $x \in \mathbb{R}$ is a BM started at x.
+
+4.  Symmetry: -B(t) is a Brownian motion  
+
+5. Scaling: $\sqrt{c} B(t/c)$ for any c > 0 is a BM
+
+6.  Time inversion: 
+
+![](graphs/mark42.png)
+
+is a BM.
+
+7.  BM is time reversible
+
+8.  BM is self-similar (that is its paths are fractals): 
+
+Consider the four graphs of BM paths drawn here:
+
+```{r echo=FALSE}
+brown(2)
+```
+
+They are drawn without labeling on the axis. They appear completely the same, but if we add the tick marks 
+
+```{r echo=FALSE}
+brown(3)
+```
+
+we see that the scales are completely different. This phenomena is called *self-similarity*.
+
+Brownian Motion is an example  of a process that has a fractal dimension of 2. One of its occurrences is in microscopic particles and is the result of random jostling by water molecules (if water is the medium). So in moving from a given location in space to any other, the path taken by the particle is almost certain to fill the whole space before it reaches the exact point that is the 'destination' (hence the fractal dimension of 2). 
+
+9.  The last property of BM is so much fun we will give it its own section:
+
+### Continuity and Differentiability
+
+When studying a continuous-time stochastic process it is often useful to think of any particular realization of the process as a function. Say S is the sample space of the process, that is the set of all possible paths $\{X(t),t \ge 0\}$, and let $\omega \in S$.
+
+Then $f(t) = X(t, \omega)$ is a function. (Usually we suppress $\omega$, though).
+
+In the case of BM, what are the properties of a typical realization B(t)? First let's look at continuity:
+
+Now by the definition we have that 
+
+$B(t+h)-B(t)  \sim  N(0,\sqrt{h})$
+
+therefore E[(B(t+h)-B(t))^2^] = h, and so the size of an increment of |B(t+h)-B(t)| is about $\sqrt{h}$. So as $h\rightarrow 0$, $\sqrt{h} \rightarrow 0$ which implies continuity. 
+
+How about differentiability? Now we have
+
+![](graphs/mark44.png)
+
+and we see that BM is nowhere differentiable! 
+
+(Of course this is rather heuristic but it can be made rigorous).
+
+The idea of functions that are continuous but nowhere differentiable has a very interesting history. It was first discussed in 1806 by André Marie Ampère and trying to show that such a function exists was one of the main open problems during the 19^th^ century. More than fifty years later it was Karl Theodor Wilhelm Weierstrass who finally succeeded in constructing such a function as follows: 
+
+![](graphs/mark45.png)
+
+Here is what this looks like for b = .2 and a = 5 + 7.5$\pi$(and a finite sum!)
+
+```{r echo=FALSE}
+weierstrass <- function (b = 0.2, a = 5 + 7.5 * pi, n = 10) 
+{
+    x <- seq(-3, 3, length = 1000)
+    I <- 0:n
+    f <- rep(0, 1000)
+    for (i in I) f <- f + b^i * cos(a^i * pi * x)
+    plot(x, f, type = "l")
+    
+}
+weierstrass()
+```
+
+The hard part here was not the construction but to show that the function existed! For the proof he developed what is now known as the *Stone-Weierstrass* theorem.
+
+Shorty after that a new branch of mathematics called *functional analysis* was developed. It studies the properties of real-valued functions on function space. Here are some  examples of such functionals:
+
+![](graphs/mark46.png)
+
+Of course one needs to specify the space of functions for which a certain functional applies. Standard "function spaces" are C, the space of all continuous functions and C^1^, the space of all continuous functions with a continuous derivative. 
+
+One of the results of functional analysis is that C is much larger than C^1^, actually of a higher order of infinity, shown with the *Baire category theorem*. 
+
+So consider the following "experiment": pick any continuous function in C. Then the probability that it has a continuous derivative anywhere is 0! So functions such as Weierstrass (or the paths of BM) are not the exception, they are the rule. Or, all the functions we study in mathematics are completely irrelevant in nature!
+
+### Stochastic Differential Equations
+
+**Theorem** 
+
+let g(x) be a continuous function and let $\{B(t),t\ ge
+0\}$ be a standard Brownian motion. For each fixed t>0, there exists a random variable
+
+![](graphs/mark47.png)
+
+which is the limit of the approximating sums
+
+![](graphs/mark48.png)
+
+as $n\rightarrow \infty$. The random variable $\Psi(g)$ is normally distributed with mean 0 and variance
+
+![](graphs/mark49.png)
+
+If f(x) is another continuous function of x, then $\Psi(f)$ and $\Psi(g)$ have a joint normal distribution with covariance
+
+![](graphs/mark410.png)
+
+There is a version of the integration by parts formula:
+
+![](graphs/mark411.png)

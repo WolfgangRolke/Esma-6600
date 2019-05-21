@@ -1,0 +1,873 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+## Expectation and Correlation 
+
+### Expectation and Variance
+
+**Definition**
+
+The **expectation** (or **expected value**) of a function g of a random variable X is defined by
+    
+![](graphs/prob41.png)
+    
+if $E[|g(X)|]<\infty$.
+
+Let $\mu= E[X]$, then $\mu$ is called the *mean* of X. 
+
+$\sigma^2 = Var(X)=E[(X-\mu)^2]$ is called the *variance* of X. The square root of the variance $\sigma$ is called the *standard deviation*.
+
+####  **Example** 
+
+Say X is the sum of two dice. Find E[X],  E[X^2^] and E[1/X].
+  
+we have 
+
+```{r}
+x <- 2:12
+y <- c(1:5, 6, 5:1)
+df <- data.frame(x=x, y=paste0(y, "/36"))
+colnames(df) <- c("x", "P(X=x)")
+kable.nice(df)
+```
+so
+$E[X] = 2\times  1/36 + 3\times 2/36+4\times 3/36+$ $5\times 4/36+6\times 5/36+7\times 6/36+8\times 5/36+9\times 4/36+$ $10\times 3/36+11\times 2/36+12\times 3/36 = 7$ 
+
+$E[X^2] = 2^2\times 1/36+3^2\times 2/36+4^2\times 3/36+$ $5^2\times 4/36+6^2\times 5/36+7^2\times 6/36+8^2\times 5/36+$ $9^2\times 4/36+10^2\times 3/36+11^2\times 2/36+12^2\times 3/36 = 54.83$ 
+
+$E[1/X] = 1/2\times 1/36+1/3\times 2/36+1/4\times 3/36+$ $1/5\times 4/36+1/6\times 5/36+1/7\times 6/36+1/8\times 5/36+$ $1/9\times 4/36+1/10\times 3/36+1/11\times 2/36+1/12\times 3/36 = 0.172$
+
+#### **Example**  
+
+we roll  fair die until the first time we get a six. What is the expected number of rolls?
+
+We saw that f(x) = 1/6*(5/6)^x-1^ if $x \in \{1,2,..\}$. Here we just have g(x)=x, so
+
+![](graphs/prob42.png)
+
+How do we compute this sum? Here is a "standard" trick:
+
+![](graphs/prob43.png)
+
+and so we find
+
+![](graphs/prob44.png)
+
+This is a special example of a *geometric rv*, that is a discrete rv X with pdf f(x)=p(1-p)^x-1^, x=1,2,..
+
+Note that if we replace 1/6 above with p, we can show that
+
+![](graphs/prob439.png)
+
+we write $X \sim$ Geom(p)
+
+**Theorem**
+
+let X,Y be some random variables, and let a,b be some real numbers. Then
+
+![](graphs/prob47.png) 
+
+**proof** (all for X discrete) 
+
+![](graphs/prob450.png)
+    
+#### **Example** 
+
+Say X is the sum of two dice. What is Var(X)?
+
+Var(X) = E[X^2^]-(E[X])^2^ = 54.83-7^2^ = 5.83  
+
+#### **Example**   
+
+find the mean and the standard deviation of a uniform [A,B] r.v.
+
+We will use a little trick for this: say $X \sim U[0,1]$, and let Y=(B-A)X+A, then for $A<y<B$ 
+
+$$F_Y (y) = P(Y<y) = P( ((B-A)X+A <y ) =$$
+$$P(X <(y-A)/(B-A) ) = (y-A)/(B-A)$$
+
+$$f_Y (y) = 1/(B-A) \text{ for } A<y<B$$
+
+so $Y \sim U[A,B]$ 
+
+![](graphs/prob46.png)
+
+**Definition**
+
+$\mu_k  = E[X^k]$ is called the k^th^ *moment* of X.
+
+$\kappa_k   = E[(X-\mu)^k]$ is called the k^th^ *central moment* of X.
+
+$\gamma_1  = \kappa_3 /(\kappa_2 )^(3/2)$ is called the *skewness* of X.
+
+$\gamma_2  = \kappa_4 /\kappa_2^2 (= \mu_4 /\sigma^4 -3)$ is called the *kurtosis* of X.
+
+The kurtosis of a distribution measure its "peakness", that is how sharp its maximum is. A distribution with $\gamma_2 =0$ is called *mesokurtic*. This is the case for example for a standard normal (see later), which is then a kind of baseline example. If $\gamma_2 <0$ it is called *platykurtic* and has a broader peak and thinner tails. If $\gamma_2 >0$ it is called *leptokurtic* meaning it has a sharper peak than the standard normal and heavier tails.
+
+#### **Example** 
+
+say X has pdf 
+
+$$f(x)=\frac1{\sqrt{2\pi \tau}}\exp\left\{-\frac{x^2}{2 \tau} \right\}$$
+
+
+for $x \in \mathbb{R}$ and $\tau>0$ 
+
+Then E[X^k^]=0 for all odd numbers k because then x^k^f(x) is an odd function. For even moments we find 
+
+![](graphs/prob465.png)
+
+**Theorem**
+
+Say X is a non-negative rv, that is $P(X \ge 0)=1$. Then 
+
+![](graphs/prob462.png) 
+
+#### **Example** 
+
+say $X \sim$ Geom(p), then
+
+![](graphs/prob463.png) 
+
+#### **Example** 
+
+Say (X,Y) is a discrete rv with joint pdf f(x,y)=cp^x^, x,y in \{0,1,..\}, $y\le x$, and $0<p<1$. Find c.
+
+We already did that before by summing first over y and then over x. We can use the above for an even simpler proof:
+
+![](graphs/prob440.png)
+
+where G is a geometric rv with rate 1-p
+
+#### **Example** 
+Say $X \sim$ U[A,B]. Find E[X^k^]. For the case A=0, B=1 find the kurtosis.
+
+![](graphs/prob45.png)
+
+![](graphs/prob466.png)
+
+so a U[0,1] is platykurtic
+
+#### **Example** 
+
+Say x is a rv with f(x)=c/(1+x^2^). (X is called a *Cauchy* random variable). Find c and show that EX does not exist. 
+
+![](graphs/prob451.png)
+
+ 
+#### **Example** 
+
+Find the mean and the standard deviation of an exponential rv with rate $\lambda$.
+
+![](graphs/prob419.png)
+
+#### **Example** 
+
+Let X be a rv with pdf f(x)=(a+1)x^a^, $0<x<1, a>0$. For what values of a is X mesokurtic, platykurtic or leptokurtic?
+
+![](graphs/prob460.png)
+
+This is a rather complicated function of a, so it is best to use a computer to do a graph:
+
+```{r}
+f <- function(a) {
+  muk <- function(a, k) (a+1)/(a+k+1)
+  mu <- muk(a, 1)
+  sig2 <- muk(a, 2) - mu^2
+  mu4 <-   muk(a, 4) - 
+         4*muk(a, 3)*mu +
+         6*muk(a, 2)*mu^2 - 
+         4*muk(a, 1)*mu^3 + mu^4
+  mu4/sig2^2-3  
+}
+a <- seq(0, 10, length=1000)
+y <- f(a)
+ggplot(data=data.frame(a=a, y=y), aes(a, y)) +
+  geom_line(color="blue", size=1.2)
+max(a[y<0])
+```
+therefore X is platykurtic for $a<1.85$ and leptokurtic for all other a. 
+
+`r hl()$hr()`
+
+There is a way to "link" probabilities and expectations is via the indicator function I~A~  defined as 
+
+![](graphs/prob48.png)
+
+because with this we have for a (continuous) r.v. X with density f:
+
+![](graphs/prob49.png)
+
+**Theorem**
+
+say we have a nonnegative rv X, that is $P(X \ge 0)=1$. Then P(X=0)=1 iff E[X]=0.
+
+**proof**
+
+say P(X=0)=1, then X is a discrete rv with pdf f(0)=1 and so $E[X]=0\times 1=0$
+
+say E[X]=0. Assume P(X=0)<1, therefore 
+P(X>0) = 1-P(X=0) > 1-1 = 0, so there exists $\delta >0$ and $\epsilon >0$ such that $P(X> \delta )> \epsilon$. Then
+
+![](graphs/prob436.png)
+
+in either case we have a contradiction with EX=0.
+
+### Expectations of Random Vectors
+
+The definition of expectation easily generalizes to random vectors:
+
+#### **Example** 
+
+say (X,Y) is a discrete random vector with joint pdf
+
+```{r}
+df <- data.frame(x=c(0.1, 0, 0.1), y=c(0.1, 0.5, 0.2))
+dimnames(df) <- list(0:2, 1:2)
+kable.nice(df)
+```
+Find E[XY]
+
+$E[XY] = 0\times 1\times 0.1 + 0\times 2\times 0.1 +$ 
+$1\times 1\times 0 + 1\times 2\times 0.5 + 2\times 1\times 0.1 +$ $2\times 2\times 0.2 = 2.0$
+
+#### **Example** 
+
+Let (X,Y) be a discrete random vector with f(x,y) = (1/2)^x+y^, $x \ge 1, y \ge 1$. Find E[XY^2^]
+
+![](graphs/prob443.png)
+
+First we have
+
+![](graphs/prob447.png)
+
+because this is the mean of a geometric rv with p=1/2. Next
+
+![](graphs/prob420.png)
+
+Note that if we replace 1/2 with p we have just shown that E[X]=1/p 
+and Var(X)=(1-p)/p^2^ for $X \sim$ Geom(p).
+
+#### **Example** 
+
+say (X,Y) is a continuous rv with f(x,y)=c if $0<y<x^a<1$ for some a>0. Find E[XY].
+
+What we have here is a uniform rv on the area described by $0<y<x^a<1$, shown here for a=1/2:
+
+![](graphs/prob448.png)
+
+So![](graphs/prob449.png)
+
+### Covariance and Correlation
+
+**Definition**
+
+Say  X and Y are two random variables. Then the *covariance* is defined by 
+
+$cov(X,Y)=E[(X-\mu_X )(Y-\mu_Y )]$ 
+
+and the *correlation* of X and Y is defined by 
+
+$\rho_{XY} = cor(X,Y) = cov(X,Y)/(\sigma_X \sigma_Y )$
+
+Note cov(X,X) = Var(X)
+
+As with the variance we have a simpler formula for actual calculations: 
+
+cov(X,Y) = E(XY) - (EX)(EY)
+
+Obviously, if cov(X,Y)=0, then 
+
+$\rho_{XY} =cor(X,Y)=cov(X,Y)/(\sigma_X \sigma_Y )=0$
+
+as well
+
+#### **Example**  
+
+Let X and Y be the sum and absolute value of the difference of two rolls of a die. What is the covariance of X and Y?
+
+So we have
+  
+  
+$\mu_X  = E[X] = 2*1/36 + 3*2/36 + ... + 12*1/36 = 7.0$
+
+
+$\mu_Y  = E[Y] = 0*6/36 + 1*12/36 + ... + 5*2/36 = 70/36$
+
+
+$E[XY] = 0*2*1/36 + 1*2*0/36 + .2*2*0/36.. + 5*12*0/36 = 490/36$
+
+and so 
+
+$cov(X,Y) = E[XY]-E[X]E[Y] = 490/36 - 7.0*70/36 = 0$
+
+Note that in the example above we previously saw that X and Y are **not** independent, so we here have an  example  that a covariance of 0 does **not** imply independence! It does work the other way around, though:
+
+**Theorem**
+
+If X and Y are independent, then cov(X,Y) = 0 
+
+**proof** (in the case of X and Y continuous):
+
+![](graphs/prob410.png)
+
+`r hl()$hr()`
+
+We saw above that E[X+Y] = E[X] + E[Y]. How about Var(X+Y)?
+
+![](graphs/prob411.png)
+
+and if $X \perp Y$  we have Var(X+Y) = Var(X) + Var(Y)
+
+#### **Example** 
+
+Consider again the example from before: we have continuous rv's X and Y with joint density f(x,y)=8xy, $0 \le x<y \le 1$. Find the covariance and the correlation of X and Y.
+
+cov(X,Y)=E[XY]-E[X]E[Y]. 
+
+We have seen before that f~Y~ (y)=4y^3^, $0<y<1$, so
+
+$E[Y]= \int_{- \infty}^\infty yf_Y (y)dy =  \int _0^1y4y^3dy = 4/5y^5|_0 ^1 = 4/5$
+ 
+Now
+
+![](graphs/prob421.png)
+
+and
+
+![](graphs/prob422.png)
+
+and so $cov(X,Y)=4/9-8/15\times 4/5 = 12/675$
+
+Also
+
+![](graphs/prob424.png)
+
+#### **Example** 
+
+say (X,Y) is a discrete rv with joint pdf f given by
+
+![](graphs/prob437.png)
+
+where a,b,c and d are numbers such that f is a pdf, that is a,b,c,d$\ge 0$ and a+b+c+d=1. Note that this is the most general case of a discrete random vector where X and Y just take two values.
+
+What can be said in this generality? 
+
+Now the marginals of X and Y are given by
+
+f~X~ (0)=a+b, f~X~ (1)=c+d
+  
+f~Y~ (0)=a+c, f~Y` (1)=b+d
+
+so
+
+$EX = 0\times (a+b)+1\times(c+d) = c+d$ 
+
+$EY = 0\times(a+c)+1\times(b+d) = b+d$
+
+also 
+
+$EXY = 0 \times 0 \times a + 1 \times0 \times b + 0 \times1 \times c + 1 \times1 \times d = d$
+
+and so
+
+cov(X,Y) =  
+  d-(c+d)(b+d) =  
+  d-cb-cd-bd-d^2 =   
+  d-bc-(c+b)d-d^2 =  
+  d-bc-(1-a-d)d-d^2 = 
+  d-bc-d+ad+d^2-d^2 = ad-bc
+  
+so X and Y are uncorrelated iff ad-bc=0
+
+Of course 
+
+![](graphs/prob438.png)
+
+is the determinant of this matrix.
+
+When are X and Y independent? For that we need f(x,y)=f~X~ (x)f~Y~ (y) for all x and y, so we need
+
+a=(a+b)(a+c)  
+b=(a+b)(b+d)  
+c=(a+b)(b+d)  
+d=(c+d)(b+d)  
+
+but
+
+a = (a+b)(a+c) =  
+a^2+(c+b)a+bc =  
+a^2+(1-a-d)a+bc =   
+a-ad+bc
+
+or 
+
+ad-bc=0
+  
+Similarly we find that each of the other three equations holds iff ad-bc=0. So 
+
+$X \perp Y \text{ iff } ad-bc=0$
+
+and here we have a case where $X \perp Y$ iff cov(X,Y)=0.
+
+Notice that if $X \perp Y$ then $rX+s \perp Y$ for any r,s with $r\ne 0$, so the above does not depend on the fact that X and Y take values 0 and 1, although the proof is much easier this way.
+
+`r hl()$hr()`
+
+If you know cov(X,Y)=2.37, what does this tell you? Not much, really, except X and Y are not independent. But if I tell you cor(X,Y)=0.89, that tells you more:
+
+**Theorem**
+
+1.  $|\rho_{XY} | \le 1$  
+2.  $\rho_{XY}  = \pm 1$ iff there exist $a \ne 0$ and b such that P(X=aY+b)=1
+
+**proof**
+
+1.  Consider the function 
+
+$h(t) = E[(X- \mu_X )t+(Y- \mu_Y )]^2$
+
+Now h(t) is the expectation of a non-negative function, so $h(t) \ge 0$ for all t. Also
+
+![](graphs/prob425.png)
+
+because the quadratic function $h(t) \ge 0$, so it has at most one real root and so the discriminant has to be less or equal to 0.
+
+![](graphs/prob432.png)
+
+2.  Continuing with the argument above  we see that 
+$|\rho_{XY} |=1$ iff D=0, that is if h(t) has a single root. But 
+
+$[(X-  \mu  _X )t+(Y-  \mu  _Y )]^2  \ge  0$
+
+for all t and we have 
+  
+h(t)=0 iff $P([(X-  \mu  _X )t+(Y-  \mu  _Y )]^2=0)=1$
+  
+This is the same as
+  
+$P((X-  \mu  _X) )t+(Y-  \mu  _Y )=0)=1$
+  
+so P(X=aY+b)=1 with a=-t and b=$\mu_X t+\mu_Y$, where t is the single root of h(t).
+
+This theorem is also a direct consequence of a very famous inequality in mathematics. To state it in some generality we need the following 
+
+**Definition**
+
+Let V be some vector space V. A mapping <.,.>:$V^2\rightarrow \mathbb{R}$ is an *inner product* on V  if for $x,y,z \in V$ and $a \in \mathbb{R}$
+
+![](graphs/prob452.png) 
+
+where the line denotes complex complement.
+
+A vector space with an inner product is called an *inner product space*.
+
+Often we also write <x,x>=||x||^2^ and then ||x|| is called the *norm*. 
+
+#### **Example**
+
+1.  R^n^ with <x,y>=$\sum x_i y_i$
+
+2.  the space of continuous functions C with 
+
+$<f,g>= \int f(x)g(x)dx$
+
+Note that in an inner product space we have a version of the Pythagorean theorem: if x and y are such that  
+
+<x,y>=0  
+
+they are said to be orthogonal, and then we have  
+
+||x+y||^2 =  
+<x+y,x+y> =  
+<x,x>+<x,y>+<y,x>+<y,y> =  
+||x||^2+||y||^2
+
+**Theorem (Cauchy-Schwartz)**
+
+say x and y are any two vectors of an inner product space, then
+
+$<x,y>^2 \le ||x||||y||$
+
+and "=" holds iff x=ay+b for some $a,b \in \mathbb{R}$.
+
+The Cauchy-Schwartz inequality is one of the most important results in Mathematics. It has a great many consequences, for example the general formulation of the Heisenberg uncertainty principle in Quantum Mechanics is derived using the Cauchy–Schwarz inequality in the Hilbert space of quantum observables.
+
+#### **Example** 
+
+Let X and Y be some rv, and define  <X,Y>=E[XY]. Then <X,Y> is an inner product. Moreover if E[X]=$\mu$ and E[Y]=$\nu$ by Cauchy-Schwartz
+
+$$
+\begin{aligned}
+&Cov(X,Y)^2 = (E[(X-\mu)(Y-\nu)])^2    = \\
+&<X-  \mu  ,Y-\nu>^2    \le   \\
+&<X-  \mu  ,X-  \mu  ><Y-\nu,Y-\nu>    = \\
+&E(X- \mu)^2E(Y-\nu)^2 =Var(X)Var(Y)    = \\
+\end{aligned}
+$$
+
+and so 
+
+![](graphs/prob453.png)
+
+and we have "=" iff P(aX+b=Y)=1
+
+`r hl()$hr()`
+
+It is one of the fascinating features in Mathematics that a theorem is sometimes easier to prove in greater generality:
+
+**proof** (Cauchy-Schwartz) 
+
+Let x and y be two vectors in an inner product space. If y=0 the inequality is true (and an equation), so assume $y \ne 0$. Let  
+
+![](graphs/prob454.png)
+
+and "=" iff z=0, in which case x=ay
+
+`r hl()$hr()`
+
+A little bit of care with covariance and correlation: they are designed to measure **linear** relationships. Consider the following:
+
+#### **Example** 
+
+let $X \sim$ U[-1,1], and let Y=X^2^. Then E[X]=0 and 
+
+E[Y] = EX^2^ =  
+Var(X)+(E[X])^2^ =  
+Var(X) = (1-(-1))^2^/12 = 4/12 = 1/3. 
+
+Also
+   
+E[XY] = E[X^3^] = (1^4^-(-1)^4^)/4/(1-(-1)) = 0 
+
+so cov(X,Y)=$0-0\times 1/3 = 0$.
+
+So here is a case of two uncorrelated rv's, but if we know X we know exactly what Y is! Correlation is only a sensible measure of *linear relationships, not any others.* 
+
+So as we said above, if you know cov(X,Y)=2.37, that does not tell you much. But if you know cor(X,Y)=0.89 and if there is a linear relationship between X and Y, we know that it is a strong positive one.
+
+**Theorem**
+
+The correlation  is *scale-invariant*, that is if $a \ne 0$ and b are any numbers, then 
+  
+cor(aX+b,Y)=cor(X,Y)
+
+**proof**
+
+![](graphs/prob428.png) 
+
+so for example the correlation between the ocean temperature and the windspeed of a hurricane is the same whether the temperature is measured in Fahrenheit or Centigrade.
+
+### Conditional Expectation and Variance
+
+**Definition**
+
+Say X|Y=y is a conditional r.v. with pdf f. Then the conditional expectation of g(X)|Y=y is defined by
+
+![](graphs/prob412.png)
+
+#### **Example** 
+
+Say (X,Y) is a discrete rv with joint pdf f(x,y)=(1-p)^2p^x, x,y in \{0,1,..\}, $y \le x$, and $0<p<1$. Find E[Y|X=x]
+  
+first we need f~Y~|X=x (y|x), and for that we need f~X~ (x):
+
+![](graphs/prob441.png)
+
+so 
+
+f~Y~|X=x (y|x) = f(x,y)/f~X~ (x) = (1-p)^2p^x/((1-p)^2(x+1)p^x) = 1/(x+1)
+
+so Y|X=x has a discrete uniform distribution on \{0,1,..,x\}. 
+
+Therefore
+
+![](graphs/prob442.png)
+
+#### **Example** 
+
+Say X and Y have a joint density f(x,y)=8xy, $0  \le  x<y  \le  1$.
+
+We previously found f~Y~ (y) = 4y^3^, 0<y<1, and f~X~|Y=y (x|y) = 2x/y^2^, $0  \le  x  \le  y$. So
+
+![](graphs/prob423.png)
+
+Throughout this calculation we treated y as a constant. Now, though, we can change our point of view and consider E[X|Y=y] = 2y/3 as a function of y:
+
+g(y)=E[X|Y=y]=2y/3
+
+What are the values of y? Well, they are the observations we might get from the rv. Y, so we can also write
+
+g(Y)=E[X|Y=Y]=2Y/3
+
+but Y is a rv, then so is 2Y/3, and we see that we can define a rv Z=g(Y)=E[X|Y]
+
+Recall that the expression f~X~|Y  does not make sense. Now we see that on the other hand the expression E[X|Y] makes perfectly good sense!
+
+Let's continue this example and find the conditional variance of X|Y=y: 
+
+![](graphs/prob444.png)
+
+and again we can consider the conditional variance of X|Y: 
+
+Var(X|Y)=Y^2^2/18 
+
+#### **Example**
+
+An urn contains 2 white and 3 black balls. We pick two balls from the urn. Let X be denote the number of white balls chosen. An additional ball is drawn from the remaining three. Let Y equal 1 if the ball is white and 0 otherwise. 
+
+For example   
+
+$f(0,0) = P(X=0,Y=0) = 3/5*2/4*1/3 = 1/10$
+
+(choose black-black-black)
+
+The complete pdf is given by:
+
+```{r echo=FALSE}
+df <- data.frame(x=c("1/10", "1/5"),
+                 y=c("2/5", "1/5"),
+                 z=c("1/10", 0))
+dimnames(df) <- list(0:1, 0:2)
+kable.nice(df)
+```
+
+
+
+Now for the marginals we have, for example 
+
+f~X~ (0)=1/10+1/5=3/10
+
+or in general:
+
+```{r echo=FALSE}
+dfx <- data.frame(x=c(0, "3/10"),
+                 y=c(1, "3/5"),
+                 z=c(2, "1/10"))
+rownames(dfx) <- c("x", "P(X=x)")
+colnames(dfx) <- NULL
+kable.nice(dfx)
+```
+
+for Y we have
+
+```{r echo=FALSE}
+dfy <- data.frame(x=c(0, "3/5"),
+                 y=c(1, "2/5"))
+rownames(dfy) <- c("y", "P(Y=y)")
+colnames(dfy) <- NULL
+kable.nice(dfy)
+```
+
+The conditional density of X|Y=0 is
+
+```{r echo=FALSE}
+dfx0 <- data.frame(x=c(0, "1/6"),
+                 y=c(1, "2/3"),
+                 z=c(2, "1/6"))
+rownames(dfx0) <- c("x", "P(X=x|Y=0)")
+colnames(dfx0) <- NULL
+kable.nice(dfx0)
+```
+
+and so 
+
+$E[X|Y=0] = 0\times 1/6+1\times 2/3+2·1/6 = 1.0$
+
+The conditional distribution of X|Y=1 is 
+```{r echo=FALSE}
+dfx1 <- data.frame(x=c(0, "1/2"),
+                 y=c(1, "1/2"),
+                 z=c(2, "0"))
+rownames(dfx1) <- c("x", "P(X=x|Y=1)")
+colnames(dfx1) <- NULL
+kable.nice(dfx1)
+```
+
+and so 
+
+$E[X|Y=1] = 0\times 1/2+1\times1/2+2·0 = 1/2$
+
+
+Finally the conditional r.v. Z = E[X|Y] has pmf 
+
+```{r echo=FALSE}
+dfz <- data.frame(x=c(1, "3/5"),
+                 y=c("1/2", "2/5"))
+rownames(dfz) <- c("z", "P(Z=z)")
+colnames(dfz) <- NULL
+kable.nice(dfz)
+```
+
+with this we can find 
+
+$E[Z] = E[E[X|Y]] = 1\times 3/5+1/2\times2/5 = 4/5$
+
+**Theorem** say X and Y are random variables. Then
+
+E[X] = E\{E[X|Y]\}
+
+and
+
+Var(X) = E[Var(X|Y)] + Var[E(X|Y)]
+
+(There is a simple explanation for this seemingly complicated formula!)
+
+**proof** (for continuous X and Y)
+
+![](graphs/prob456.png)
+
+####  **Example** 
+
+above we found E[E[X|Y]] = 4/5. Now
+
+$E[X] = 0\times 3/10 + 1\times 3/5 + 2\times 1/10 = 4/5$
+
+#### **Example**
+
+let's say we have a continuous bivariate random vector with the joint pdf f(x,y) = c(x+2y) if $0<x<2, 0<y<1$, 0 otherwise. 
+
+Now
+  
+![](graphs/prob413.png)
+
+#### **Example** 
+say X has a density f~X~ (x) = (a+1)x^a^, $0<x<1, a>1$.  $Y|X=x \sim$ Exp(x). Find E[Y] and Var(Y).
+
+To find E[Y] we first need the density of Y: 
+
+![](graphs/prob457.png)
+
+and this integral can not be found explicitely, so this won't work. 
+
+But 
+
+![](graphs/prob458.png)
+
+#### **Example** 
+
+Let's have another look at the example of the "device" which generates a random number Y according to an exponential distribution with rate $\lambda$ where $\lambda=x$ with probability 0.5^x^ where x=1,2,3,... We previously found that f~Y~ (y) = 2e^y^/(2e^y^-1)^2, $y \ge 0$.
+
+Let's find E[X|Y] 
+
+Note E[Y|X] would be easy (=1/X because $Y \sim$ Exp(X)), E[Y] would be a simple calculus problem ( $\int y2e^y/(2e^y-1)^2dy$ ) and E[X] would be the easiest (=2 because $X \sim$ Geom(1/2)), just E[X|Y=y] needs a little work:
+
+![](graphs/prob445.png)
+
+we said above that E[X]=2. 
+
+Let's check the formula E[X]=E\{E[X|Y]\}:
+
+![](graphs/prob446.png)
+  
+### Moment Generating and Characteristic Functions
+
+**Definition**
+
+The moment generating function of a rv X is defined by
+
+$$\Phi(t)=E[\exp (tX)]$$
+
+The characteristic function of a rv X is defined by
+
+$$\Phi(t)=E[\exp (itX)]$$
+
+In general characteristic functions are much more useful in Probability Theory, but they require some knowledge of complex analysis, and so we will just consider moment generating functions.
+
+#### **Example** 
+Let $X \sim$ Exp($\lambda$), find the mgf $\Phi$.
+
+![](graphs/prob429.png)
+
+The name comes from the following theorem
+
+**Theorem**
+
+Say $\Phi(t)$ is the mgf of a rv X. Say there exists an $\epsilon >0$ such that $|  \Phi  (t)|<  \infty$   for all t in $(-  \epsilon  ,  \epsilon  )$. Then
+
+$\Phi^k(0) = E[X^k]$ for all k.
+
+**proof**
+
+say X is a discrete rv with pdf f(x) and X takes finitely many values. Then
+
+![](graphs/prob459.png) 
+
+The extension to an infinite sample space and to a continuous rv requires some real analysis theorems. 
+
+#### **Example** 
+
+For the exponential rv we have
+
+![](graphs/prob430.png)
+
+**Warning** nobody uses the moment generating function to generates moments! It has other uses:
+
+**Theorem**
+
+let X~1~ ,..., X~n~  be a sequence of independent rv.s with mgf's $\Phi_i$ , and let $Z=\sum X_i$ , then
+
+$$\Phi_Z (t)=\prod \Phi_i (t)$$
+
+if the distributions of the X~i~  are the same as well, then $\Phi_i =\Phi_X$  for all i and 
+
+$$\Phi_Z =(\Phi(t))^n$$
+
+**proof**
+
+![](graphs/prob431.png)
+
+here is a very deep theorem, without proof:
+
+**Theorem**
+
+let X and Y be rv.s with mgf's $\Phi_X$  and $\Phi_Y$ , respectively. If both mgf's are finite in an open neighborhood of 0 and if $\Phi_X (t) = \Phi_Y (t)$ for all t in this neighborhood, then $F_X (u)=F_Y (u)$ for all u.
+
+In other words, the cdf determines the mgf and **vice versa**. This means that one way to show that two random variables have the same distribution is to show that they have the same mgf. 
+
+####  **Example** 
+
+show that the sum of two independent exponential rv. is **not** an exponential rv.
+
+say $X \sim$  Exp($\lambda$) and $Y \sim$  Exp($\rho$), then   
+
+$\Phi_X (t)=  \lambda  /(  \lambda  -t)$ and   $\Phi_Y (t)=\rho/(\rho-t)$, so   
+
+$\Phi_{X+Y} (t)=  \lambda/(\lambda-t)\rho/(\rho-t)  \ne  a/(a-t)$
+
+for any a and all t.
+
+#### **Example** 
+
+Consider the two pdfs given by
+
+![](graphs/prob433.png)
+
+(f~1~  is called a log-normal distribution).
+
+Now it turns out that if X~1~  has density f~1~ , then 
+
+![](graphs/prob434.png)
+
+where we use the change of variables t=log(x)
+
+but
+
+![](graphs/prob435.png)
+
+(use change of variables t=log(x)-r)
+
+and so here is an example that shows that the condition of the theorem above is also necessary, without it you can have two rv's with all their moments equal but different distributions.

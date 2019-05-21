@@ -1,0 +1,105 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  html_document: default
+  pdf_document:
+    fig_caption: no
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+## Law of the Iterated Logarithm
+
+Let $X_1 ,X_2 ,.$. be iid rv's with mean 0 and std 1. Let $S_n  = X_1 +..+X_n$ . As we saw before, by the strong law of large numbers we have $S_n /n \rightarrow 0$ almost surely, and in the last section we saw that by the central limit theorem we have $S_n /\sqrt{n}$ 
+converges in distribution to a standard normal random variable. So in some sense $S_n /n$ "squeezes" down to one point whereas $S_n /\sqrt{n}$ "spreads out", roughly between -3 and 3. It is a reasonable question then whether there is an in-between case, namely a sequence $\{a_n \}$ such that 
+
+$\sqrt{n} < a_n  < n$ 
+
+and $S_n /a_n$  converges to something between a constant and a distribution. The answer is given by
+
+**Theorem (Law of the Iterated Logarithm, Kolmogorov 1929)**
+
+![](graphs/limits39.png)
+
+by symmetry the corresponding liminf is $-\sqrt{2}$, so this sequence oscillates between $\pm \sqrt{2}$.
+
+**proof** (outline) 
+
+If the X~i~'s are Bernoulli rvs, we have a random walk and one can show that $P(S_n =0) = 1/\sqrt{\pi n}$.
+
+A similar argument (again starting with Sterling's formula) can be used to show that if n+k is even 
+
+![](graphs/limits139.png)
+
+next with some arithmetic one can show that there exists a c>0 such that
+
+![](graphs/limits140.png) 
+
+and finally on applies the Borel-Cantelli lemma to show that for any $\epsilon >0$
+
+![](graphs/limits141.png)
+
+#### **Example** 
+
+let ~Y_1 , Y_2 , ..~ be iid Ber(1/2), then E[Y~i~ ]=1/2 and Var(Y~i~ )=1/4. Let X~i~  = (Y~i -1/2)/(1/2) = 2Y~i~ -1, then E[X~i` ]=0 and Var(X~i~ )=1. Let  $S_n  = X_1 +..+X_n$.
+
+The following graph has  100 simulated sequences with n=10000 and the four different "normalizations"
+
+```{r}
+K <- 20
+df <- data.frame(n=rep(1:1e4, K),
+                 y=0*K*1e4,
+                 z=rep("1", K*1e4))
+for(i in 1:K) {
+  df$y[((i-1)*1e4+1):(i*1e4)] <- 
+    cumsum(2*sample(0:1, size=1e4, replace = TRUE)-1)
+  df$z[((i-1)*1e4+1):(i*1e4)] <- rep(paste(i), 1e4)
+}
+df$z <- factor(df$z)
+```
+
+1.  S_n 
+
+```{r sn}
+ggplot(data=df, aes(n, y, color=z)) +
+  geom_line(size=0.5) + 
+  theme(legend.position = "none") +
+    stat_function(fun = function(x) 2*sqrt(x),
+                  size=1.2, color="blue") +
+    stat_function(fun = function(x) -2*sqrt(x),
+                  size=1.2, color="blue")
+```
+
+2.  S_n /n
+
+```{r sn2}
+ggplot(data=df, aes(n, y/n, color=z)) +
+  geom_line() + theme(legend.position = "none")
+```
+
+3. $S_n /\sqrt{n}$
+
+```{r sn3, cache=TRUE}
+ggplot(data=df, aes(n, y/sqrt(n), color=z))  +
+  geom_line(size=0.5) + 
+  theme(legend.position = "none") 
+```
+
+
+4.  $S_n /\sqrt{n\log\log n}$
+
+```{r sn4}
+ggplot(data=df, aes(n, y/sqrt(log(log(n))*n), color=z)) +
+  geom_line(size=0.5) + 
+  theme(legend.position = "none") +
+    stat_function(fun = function(x) 2,
+                  size=1.2, color="blue") +
+    stat_function(fun = function(x) -2,
+                  size=1.2, color="blue")
+```

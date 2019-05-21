@@ -1,0 +1,171 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+## Continuous-time Markov Chains
+
+**Definition**
+
+Say $\{X(t), t \ge 0\}$ is a continuous-time stochastic process taking values on the nonnegative integers. Then X(t) is a Markov chain if for all $s,t \ge 0$, and nonnegative integers i,j, x(u), $0 \le u<s$ we have
+
+![](graphs/mark116.png)
+
+The main result for such chains is
+
+**Theorem**
+
+let $\{X(t),t \ge 0\}$ be a continuous-time Markov chain with X(0)=i. Let T~i~  be the time the process stays in state i. Then 
+T~i~  has an exponential distribution.
+
+**proof** 
+
+![](graphs/mark512.png)
+  
+But this means that T~i~  is *memoryless*! Of course T~i~  is also non-negative and continuous, and therefore T~i~  has to have an exponential distribution.
+
+`r hl()$hr()`
+
+With this we have the following characterization of a continuous-time Markov chain:
+  
+1.  the amount of time spent in state i is an exponential distribution with mean v~i~.
+
+2.  when the process leaves state i it next enters state j with some probability, say P~ij~.
+
+So a continuous-time Markov chain is a process that moves from state to state in accordance with a discrete-space Markov chain, but also spends an exponentially distributed amount of time in each state.
+
+`r hl()$hr()`
+
+Let's  consider a finite- statespace continuous-time Markov chain, that is $X(t)\in \{0,..,N\}$. Let 
+
+$P_{ij} (t) = P(X(t)=j|X(0)=i)$
+
+then the the Markov property asserts that $\{X(t),t \ge 0\}$ satisfies
+
+![](graphs/mark51.png)
+  
+where c) follows from the Chapman-Kolmogorov equations. 
+
+d*) is not strictly a consequence of the Markov property but is usually a sensible additional condition.
+
+Let P(t)=(p~ij~) denote the matrix of transition probabilities at time t, so P is a matrix whose entries are functions of t.
+
+Now c) can be written as 
+
+$P(s+t)=P(s)P(t)\text{ for all } t,s \ge 0$ 
+
+and d*) as 
+
+$\lim_{h\rightarrow 0} P(h)=I$
+  
+this implies that P(t) is (right)-continuous at time 0, meaning each entry is continuous at t=0. Now
+
+![](graphs/mark52.png)
+
+and so P(t) is continuous for all $t \ge 0$. Actually, we have even more:
+
+![](graphs/mark53.png)
+
+which shows that P(t) is even differentiable
+
+The rates q~i~  and q~ij~  give as a second way to describe a Markov chain, called the *infinitesimal description*:
+
+![](graphs/mark54.png)
+
+Let
+
+![](graphs/mark55.png)
+
+#### **Example (Two-state Chain)**
+
+say $\{X(t), t \ge 0\}$ is a Markov chain with $X(t) \in \{0,1\}$ and
+
+![](graphs/mark56.png)
+
+We need A^n^, so
+
+![](graphs/mark57.png) 
+
+`r hl()$hr()`
+
+it is easy to find the stationary distribution of a continuous-time discrete-space Markov chain in terms of the infinitesimal matrix. If all states communicate, that is if P~ij~ (t)>0 for all i,j and some t>0, then 
+
+$\lim_{t\rightarrow \infty} P_{ij} (t) = \pi_j >0$
+
+exists, and
+
+![](graphs/mark58.png)
+
+otherwise the chain would never leave i, and so we have $\pi A=0$ or
+
+$\pi_j q_j = \sum_{i \ne j} \pi_i q_{ij}$ 
+
+j=0,..,N
+
+#### **Example (Redundancy)**
+
+A company has a computer for its website. If the computer is down they can't sell anything, so they have a backup, which takes over if the first computer is down. The operating computer fails after an exponentially distributed time (with rate $\mu$). Repair times are also exponentially distributed (with rate $\lambda$). Let's assume that $\mu$ is fixed but we have a choice of $\lambda$ (by hiring more technicians). We want to make sure that in the long run at most 1\% of the time both computers are down. How should we choose $\lambda$?
+
+Let X(t) be the number of computers in operating condition at time t, so X(t) is 0, 1 or2. Then X(t) is a Markov chain with infinitesimal matrix
+
+![](graphs/mark59.png)
+
+What is the average "total downtime", that is the time when neither computer is working? The system of equations for the stationary distribution is
+
+![](graphs/mark510.png)
+
+and we see that the probability only depends on the ratio $\lambda/\mu$. Set $x=\lambda/\mu$, then
+
+![](graphs/mark511.png)
+
+### Continuous-time Markov Chains with Infinite Statespace
+
+#### **Example (Pure Birth process)**
+
+Many webpages have a counter that keeps track of the number of people who have visited the site. We can model such a counter as a Markov Chain called a "Pure Birth" process. At time 0 there have been 0 visitors. Say at time t there have been X(t)=n. The counter stays at n for time T that has an exponential distribution with rate $\lambda$.
+
+#### **Example (Birth and Death Processes)**
+  
+Consider a system whose state at any time is the number of "people" in the system. Suppose if there are n people in the system then
+
+(i) new arrivals enter the system at an exponential rate $\lambda_n$  ("births") 
+
+(ii) people leave the system at and exponential rate $\mu_n$  ("deaths")
+
+(ii) births and deaths occur independently of each other
+
+Thus a birth and death process is a Markov chain with state-space \{0,1,..\} and 
+
+1.  $v_0  = \lambda_0$   
+2.  $v_i  = \lambda_i  + \mu_i$   
+3.  P~01~  = 1  
+4.  $P_{i,i+1}  = \lambda_i /(\lambda_i  + \mu_i )$  
+5.  $P_{i,i-1}  = \mu_i /(\lambda_i  + \mu_i )$
+
+where 4) is because we go from i to i+1 if there is a birth before a death. Let $X \sim Exp(\lambda), Y \sim Exp(\mu)$ and
+$X \perp Y$. Now
+
+![](graphs/mark117.png" >
+
+#### **Example (A simple epidemic model)**
+
+Consider a population of m individuals that at time 0 consists of 1 "infected" and m-1 "susceptible" (individuals that might get infected, maybe because they have not been immunized. Once infected an individual remains so forever and we suppose that in any time interval h any given infected person will cause, with probability $\alpha h+o(h)$ any given susceptible to become infected. If we let X(t) denote the number of infected people in the population at time t, X(t) is a pure birth process with
+
+$\lambda_n =(m-n)n \alpha, n=1,..,m-1$
+
+because if there are n infected people the m-n uninfected ones get infected at a rate of $n \alpha$.
+
+Let T~i~  be the time to go from i to i+1 infected, and let T be the time until the total population is infected, then 
+
+![](graphs/mark125.png)

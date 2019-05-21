@@ -1,0 +1,232 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+## Conditional Probability and Independence 
+
+#### **Example**
+
+A bag contains slips of paper. Each paper has a number and a letter written on them. They are: A5, A7, B1, B2, C2, C4, D2, D4, E1, E3. A slip is chosen at random, what is the probability it has a 2 on it?
+
+Easy: 3/10
+
+Now say somebody picks a slip and tells you it has the letter B on it. Now what is the probability it also has a 2 on it?
+
+Again easy: 1/2
+
+This is an example of a conditional probability. we write 
+
+P(#2 | Letter B) 
+
+(" probability of #2 **given** letter B) 
+
+Above we found the conditional probability by changing the sample space. First it was S=\{A5, A7, B1, B2, C2, C4, D2, D4, E1, E3\} but once we knew the slip of paper had the letter B it changed to S=\{B1, B2\}.
+
+In general this changing of the sample space is too difficult, but we can find conditional probabilities using the formula
+
+$$P(A|B) = \frac{P(A \cap B)}{P(B)}$$
+  
+Note: this only works if P(B)>0.
+
+Note: this formula can also be derived using the idea of coherence and the concept of the sure looser discussed earlier. 
+
+#### **Example** (cont.) 
+
+P(#2 | Letter B) =P(#2 $\cap$ Letter B) /P(Letter B) = (1/10) / (2/10) = 1/2.
+
+It is important to notice that conditional probabilities are just like regular ones, for example they obey the axioms of Kolmogorov:
+
+Axiom 1: $P(A|B)=P(A \cap B)/P(B)$, but $P(A \cap B)$ and P(B) are both regular probabilities, so $P(A \cap B) \ge 0$, $P(B)>0$, so $P(A|B)=P(A \cap B)/P(B) \ge 0$.
+
+Also $A \cap B \in B$, so $P(A|B)=P(A \cap B)/P(B) \le P(B)/P(B)=1$.
+
+Axiom 2: $P(S|B)=P(S \cap B)/P(B)=P(B)/P(B)=1$.
+
+Axiom 3: say $A_1 ,..,A_n$  are mutually exclusive, then
+
+![](graphs/prob221.png)
+
+### Multiplication Rule
+
+A simple manipulation of the equation above yields
+
+$$P(A \cap B)=P(A|B)P(B)$$
+
+#### **Example**  
+
+You draw  two cards from a standard 52-card deck. What is the probability to draw 2 Aces?
+
+Solution:
+
+Let A = "First card drawn is an ace" 
+Let B = "Second card drawn is an ace"
+
+Then
+
+![](graphs/prob27.png)
+
+It's easy to extend this to more than two events: What is the probability of drawing 4 aces when drawing 4 cards?
+
+Let $A_i$  = "i^th^ card drawn is an ace"
+
+Then
+
+![](graphs/prob28.png)
+
+even a little more complicated: In most Poker games you get in the first round 5 cards (Later you can exchange some you don't like but we leave that out). What is the probability that you get 4 aces?
+
+![](graphs/prob29.png)
+
+### Law of Total Probability and Bayes Rule
+
+**Definition**
+
+A set of events {A~i~} is called a **partition** of the sample space S if
+
+$$
+\begin{aligned}
+&A_i \cap A_j)    = \emptyset \text{ for all } i \ne j \\
+&\cup_{i=1}^n A_i    = S\\
+\end{aligned}
+$$
+
+#### **Example**
+
+a student is selected at random from all the undergraduate students at the Colegio
+
+A~1~  = "Student is female",  A~2~  = "Student is male"
+
+or maybe
+
+A~1~  = "Student is freshman",  .., A~4~  = "Student is senior"
+
+**Theorem (Law of Total Probability)**
+
+Let the set of events {A_i } be a partition, and let B be any event, then 
+
+$$P(B) = \sum_{i=1}^n P(B|A_i)P(A_i)$$
+
+**Proof**
+
+$$
+\begin{aligned}
+&P(B) = P(B \cap S) = \\
+&P(B \cap ( \cup ^ \infty _i=1 A_i ) = \\
+&P( \cup^\infty_{i=1} (B \cap A_i ) = \\
+&\sum^\infty_{i=1} P(B \cap A_i ) =\\
+&\sum^\infty_{i=1} P(B|A_i )P(A_i )
+\end{aligned}
+$$
+
+
+#### **Example**  
+A company has 452 employees, 210 men and 242 women. 15\% of the men and 10\% of the women have a managerial position. What is the probability that a randomly selected person in this company has a managerial position?
+
+Let A~1~  = "person is female",  A~2~  = "person is male".
+
+Let B = "person has a managerial position"
+
+Then
+
+$$
+\begin{aligned}
+&P(A_1)    = \frac{242}{452} \\
+&P(A_2)    = \frac{210}{452}  \\
+&P(B)    = P(B|A_1)P(A_1)+P(B|A_2)P(A_2)=\\
+&0.1\frac{242}{452}+0.15\frac{210}{452}=0.123
+\end{aligned}
+$$
+
+
+#### **Example** 
+
+Say you roll a fair die. If you roll an even number you roll the die again, otherwise you keep the result of the first roll. What are the probabilities of rolling a 1, or a 2 or..,..,6? 
+
+![](graphs/prob222.png)
+and the same for 3-6 
+
+**Theorem (Bayes' Formula)**
+
+Let the set of events \{A~i~\} be a partition, and let B be any event, then 
+
+$$P(A_k|B)=\frac{P(B|A_k)P(A_k)}{\sum_{i=1}^n P(B|A_i)P(A_i)}$$
+
+Notice that the denominator is just the law of total probability, so we could have written the formula also in this way
+
+$$P(A_k|B)=\frac{P(B|A_k)P(A_k)}{P(B}$$
+  
+only usually the first form is the one that is needed because of the available information.
+
+**proof:**
+
+$$
+\begin{aligned}
+&P(A_k |B) = \\
+&P(A_k  \cap B)/P(B) = \\
+&P(B \cap A_k )/P(B) = \\
+&P(B|A_k )P(A_k )/P(B)
+\end{aligned}
+$$
+
+#### **Example**  
+
+In the company above a person is randomly selected, and that person is in a managerial position. What is the probability the person is female?
+
+$$P(A_1|B) = \frac{P(B|A_1)P(A_1)}{P(B}=$$  
+$$\frac{0.1\times242/452}{0.123}=0.434$$
+
+Bayes formula sometimes results in strange answers:
+
+#### **Example** 
+As part of the attempt to avoid further terrorist attacks on the US some people have proposed face-recognition technics for airports. Basically each person entering the security checkpoint of the airport is photographed and the digital picture is then compared to a list of pictures of known terrorist suspects. Such systems are never 100% correct, they do make an occasional mistake. Say that the system classifies an actual terrorist as ok 50% of the time (many terrorists won't be in the database because they have never been investigated). This is called a false-negative. Also say that the system wrongly classifies an ok person as a terrorist 0.1% of the time (false-positive). Say at some large airport there are 10 million passengers per year, 20 of whom are actually terrorists. What is the probability that a person classified as a terrorist by the face-recognition system actually is not a terrorist?
+
+Let's use the following notation:
+
+Let A~1~  = "person is not a terrorist",  A~2~  = "person is a terrorist"
+
+B = "person is classified as a terrorist"
+
+Now
+
+![](graphs/prob216.png)
+
+So only 1 in 1000 people "accused" by the system actually is a terrorist!
+
+Note: in this calculation you need to carry along a lot of digits until the final answer.
+
+Bayes' Rule plays a very important role in Statistics and in Science in general. It provides a natural method for updating your knowledge based on data. 
+
+### Independence
+
+Sometimes knowing that one event occurred does not effect the probability of another event. For example   if you through a red and a blue die, knowing that the red die shows a "6" will not change the probability that the blue die shows a "2".
+
+Formally we have 
+
+$$P(A|B)=P(A)$$
+
+
+or using the multiplication rule we get the previous formula for two independent events
+
+$$P(A\cap B)=P(A|B)P(B)=P(A)P(B)$$
+
+#### **Example**
+
+Say you flip a fair coin 5 times. What is the probability of 5 "heads"?
+
+Let A~i~  = "i^th^ flip is heads"
+
+Now it is reasonable to assume that the A~i~'s are independent and so
+
+![](graphs/prob219.png)

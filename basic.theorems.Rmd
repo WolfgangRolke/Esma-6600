@@ -1,0 +1,329 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+## Basic Theorems
+
+### Basic Definitions
+
+An **experiment** is a well-defined procedure that produces a set of outcomes. For example, "roll a die", "randomly select a card from a standard 52-card deck", "flip a coin" and "pick any moment in time between 10am and 12 am" are experiments. 
+
+A **sample space** is the set of outcomes from an experiment. Thus, for "flip a coin" the sample space is \{H, T\}, for "roll a die" the sample space is \{1, 2, 3, 4, 5, 6\} and for "pick any moment in time between 10am and 12 am" the sample space is [10, 12]. 
+
+An **event** is a subset, say A, of a sample space S. For the experiment "roll a die", an event is "obtain a number less than 3". Here, the event is \{1, 2\}.
+
+### Kolmogorov's Axioms of Probability
+
+For any probability P we have
+
+![](graphs/prob11.png)
+  
+if $A_1 ,  A_2, ..$ are mutually exclusive.
+
+Note one difference between the axioms here and our discussion on coherence before. There we showed that in order to avoid being a sure looser we have to have
+
+$P(A\cup B)=P(A)+P(B)$
+
+if A and B are disjoint. The extension to a finite collection of disjoint sets is straightforward (via induction) but in the axioms we also allow an infinite collection. This is called **countable additivity**, and is an extension to the requirements of coherence as discussed before. It can be shown that without this extension there is another type of dynamic sure loss. 
+
+#### **Example**  
+say we have a sample space $S=\{e_1 , ..., e_n \}$ and an event $A=\{e_{k_1}  , ..., e_{k_m}\}$. Let's assume that all the events are **equally likely**. Then: 
+   
+![](graphs/prob12.png)
+and so  in this (very special) case finding a probability becomes a counting problem. We will discuss some formulas for this soon. 
+
+### Set Theory
+
+Recall the following formulas for sets:
+
+**Commutativity**: 
+
+$A\cup B = B \cup A$ and $A \cap B=B \cap A$
+
+**Associativity** 
+
+$A \cup (B \cup C) = (A \cup B) \cup C$  
+$A \cap (B \cap C) = (A \cap B) \cap C$
+
+**Distributive Law**
+
+$A \cup (B \cap C) = (A \cup B)) \cap (A \cup C)$  
+$A \cap (B \cup C) = (A \cap B) \cup (A \cap C)$
+
+**DeMorgan's Law**
+
+$(A \cup B)^c = A^c  \cap  B^c$  
+$(A \cap B)^c = A^c  \cup  B^c$
+
+### Basic Theorems and Inequalities
+
+**Theorem (Addition Formula) **
+
+Let  A and B be two sets, then 
+
+$P(A \cup B) = P(A)+P(B)-P(A \cap B)$
+  
+**Proof:** first note that
+  
+$A\cup B = (A \cap B^c)  \cup  (A \cap B)  \cup (A^c \cap B)$
+  
+and that all of these are disjoint. Therefore by the third axiom we have
+  
+$P(A \cup B) = P(A \cap B^c) + P(A \cap B) + P(A^c \cap B)$
+  
+but
+
+$$
+\begin{aligned}
+&P(A \cap B^c) + P(A \cap B) + P(A^c \cap B)    = \\
+&\{P(A \cap B^c)+P(A \cap B)\} + {P(A^c \cap B)+P(A \cap B)} - P(A \cap B)    = \\
+&P( (A \cap B^c) \cup (A \cap B)) + P( (A^c \cap B) \cup (A \cap B)) - P(A \cap B)    = \\
+&P( A \cap (B^c \cup B)) + P( (A^c \cup A) \cap B)) - P(A \cap B) =\\
+&P(A \cap S)+P(S \cap B)-P(A \cap B) = \\
+&P(A)+P(B)-P(A \cap B)
+\end{aligned}
+$$
+
+**Theorem (Bonferroni's Inequality)**
+ 
+Let A and B be two sets, then
+   
+$P(A \cap B)  \ge  P(A)+P(B)-1$
+  
+**proof** follows directly from the addition formula and $P(A \cup B) \le 1$.
+
+**Theorem (Complement)**
+
+Let A be any set, then
+
+$P(A) = 1 - P(A^c)$
+  
+**Proof:** $S = A \cup A^c$, so
+  
+$1 = P(S) = P(A  \cup  A^c) = P(A) + P(A^c)$
+
+**Theorem (Subset)**
+
+Let A and B be two sets such that 
+
+$A \in B$ then $P(A) \le P(B)$
+  
+**proof:** 
+$$
+\begin{aligned}
+&B = B \cap S = B \cap (A \cup A^c) = \\
+&(B \cap A)  \cup  (B \cap A^c) = \\
+&A  \cup  (B \cap A^c)\\
+&\text{so}\\
+&P(B) = P(A  \cup  (B \cap A^c) = \\
+&P(A) + P(B \cap A^c)  \ge  P(B)\\
+\end{aligned}
+$$
+
+**Theorem (Boole's Inequality) **
+
+Let $A_1 ,..,A_n$  be a (finite) collection of sets, then
+  
+$P( \cup^n_{i=1} A_i )  \le   \sum^n_{i=1} P(A_i )$
+
+**proof** follows by induction from the above 
+
+### Borel-Cantelli lemmas
+
+**Definition**
+
+Let $\{A_n , n \ge 1\}$ be a sequence of events. Then
+
+a.  the sequence is called increasing if  $A_n \in A_{n+1}$ 
+
+If $\{A_n , n \ge 1\}$ is an increasing sequence of events we define the new event $\lim A_n$ by
+
+$\lim A_n  = \cup_{n=1}^\infty A_n$
+
+b) the sequence is called decreasing if  $A_{n+1} \in A_n$ 
+
+If $\{A_n , n \ge 1\}$ is a decreasing sequence of events we define the event $\lim A_n$ by
+
+$\lim A_n  = \cap_{n=1}^\infty A_n$
+
+**Theorem**
+
+If $\{A_n , n \ge 1\}$ is either an increasing or a decreasing sequence of events then
+
+$\lim P(A_n ) = P(\lim A_n )$
+
+**proof**: Suppose first that $\{A_n , n \ge 1\}$ is an increasing sequence. Define the events $F_n$  by
+
+$F_1  = A_1$ 
+
+$F_{n+1}  = A_{n+1} \cap (\cup_{i=1}^n A_i )^c = A_{n+1}  \cap A_n ^c$
+
+That is, $F_n$  consists of those points that were not in any earlier $A_i , i=1,..,n-1$
+
+By their definition the $F_n$  are mutually exclusive, so
+
+![](graphs/prob06.png)
+The proof for a decreasing sequence $\{A_n , n \ge$ \}$ follows directly from the fact that then $\{A^c_n, n \ge 1\}$ is an increasing sequence.
+
+#### **Example** 
+Consider a population consisting of individuals able to produce offspring of the same kind. The number of individuals initially present, denoted by $X_0$, is called the size of the zero'th generation. All offspring of the zero'th generation constitute the first generation and their number is denoted by $X_1$. In general, let $X_n$  denote the size of the $n^{th}$ generation. 
+
+Let $A_n  = \{X_n =0\}$. Now since $X_n =0$ implies $X_{n+1} =0$, it follows that $\{A_k , k \ge n\}$ is an increasing sequence and thus $\lim P(A_n )$ exists. What is the meaning of this probability? We have
+$$
+\begin{aligned}
+&\lim P(X_n =0) = \lim P(A_n ) =\\
+&P(\lim A_n ) =\\
+&P( \cup A_n  )= \\
+&P( \cup \{X_n =0\} )= \\
+&P(\text{the population eventually dies out})
+\end{aligned}
+$$
+  
+  
+**Definition**
+
+Let $\{A_n \}$ be an infinite sequence of events. Then 
+
+$\{A_n  \text{ i.o.}\}$ ("$A_n$  infinitely often")  
+
+is the event that for any m there exists an n>m such that $P(A_n )>0$.
+
+Note: $\{A_n  \text{ i.o.}\} =  \cap _m  \cup _{n \ge m} A_n$ 
+
+**Theorem (Borel-Cantelli lemma)**
+
+Let $A_1 , A_2 , ..$ be sequence of events. If $\sum P(A_i ) < \infty$ then
+
+$P(\{A_n  \text{ i.o.}\})=0$.
+
+**proof** Let's call the event that an infinite number of the $A_i$'s occur $\limsup A_i$. Then
+
+$$\limsup A_i = \cap_{n=1}^\infty \cup_{i=n}^\infty A_i$$
+
+This is because if an infinite number of $A_i$'s occur, then for any n there exists an m >n such that $A_m$  occurs, therefore 
+
+$\cup_{i=n}^\infty A_i$ occurs, and then the intersection occurs as well.
+
+Now $\cup_{i=n}^\infty A_i; n\ge 1\}$ is a decreasing sequence and so it follows that
+
+![](graphs/prob09.png)
+
+#### **Example** 
+
+Let $X_1 , X_2 , ..$ be such that $P(X_n =0)=1/n^2 = 1-P(X_n =1)$
+
+Let $A_n =\{X_n =0\}$, then
+
+$\sum P(A_n ) =  \sum 1/n^2 <  \infty$.
+
+so it follows that the probability that $X_n$  equals 0 for an infinite number of n is also 0. Hence, for an n sufficiently large $X_n$  must equal 1.
+
+### Independence
+
+**Definition**
+
+a.  Two events A and B are said to be **independent** if
+
+$P(A \cap B)=P(A)P(B)$
+    
+b.  A set of events $\{A_n ,n \ge 1\}$ is said to be **pairwise independent** if for any i and j $A_i$  and $A_j$  are independent.
+
+c.  A set of events $\{A_n ,n \ge 1\}$ is said to be **independent** if for any set of indices {i_1 ,..,i_n ) we have
+
+$$P(\cap_{i=1}^n A_i ) =\prod_{i=1}^n P(A_i) $$ 
+
+**Theorem**
+
+Pairwise independence does not imply independence.
+
+**proof** Consider the sample space $S=\{1,2,3,4\}$ where all outcomes are equally likely. Define the events
+
+$A=\{1,2\}, B=\{1,3\}$ and $C=\{1,4\}$
+
+then we have
+
+P(A) = P(B) = P(C) = 1/2
+
+and
+
+$P(A \cap B) = P(B \cap C) = P(A \cap C) = 1/4$
+
+so we have pairwise independence,  but
+
+$1/8 = P(A)P(B)P(C)  \ne  P(A \cap B \cap C) = 1/4$
+
+**Theorem (Second Borel-Cantelli lemma)**
+  
+If $A_1 , A_2 , ..$ are independent events such that 
+
+$\sum P(A_i ) = \infty$ then
+  
+$P(\{A_n  \text{i.o.}\}) =1$
+
+**proof**: If an infinite number of the $A_i$'s occur, then by the same reasoning as in the first Borel-Cantelli lemma we have $\limsup A_n$  occur, so we need to show that 
+
+$P(\limsup A_n ) = 1$
+
+or equally 
+
+$1-P(\limsup A_n ) = 0$ 
+
+Now
+
+![](graphs/prob14.png)
+ 
+####  **Example** 
+consider the following game we start with an urn with one white ball and one black ball. Let 
+    
+$A_1 =${"white ball drawn"} 
+
+next we add a black ball and let $A_2$  again be the event {"white ball drawn"}. We continue on like that.
+
+Now  $P(A_n )=1/(n+1)$. Clearly the $A_i$'s are independent and
+
+$\sum P(A_i ) =  \sum 1/(n+1) =  \infty$ 
+
+and therefore 
+
+$P(\{A_n  \text{i.o.}\}) = 1$
+
+So no matter how many balls are already in the urn, at some point in the future we will again pick a white one. 
+
+Say in each round we add k black balls, then the same 
+
+$\sum P(A_i ) = 1/(1+1) + 1/(2+k) + 1/(2+2k) + .. =$   $\sum 1/(2+nk) = \infty$ 
+
+for any k>0, so the same conclusion holds!
+
+`r hl()$hr()`
+
+
+If we take the two Borel Cantelli lemmas together we have the following: Let $\{A_n \}$ be a sequence of independent events, then
+
+$P(\{A_n  \text{i.o.}\}) =$ 0 or 1
+
+This is an example of a so called 0-1 law, of which there are quite a few in Probability Theory. Here is one of the famous ones:
+
+**Definition **
+
+Let $\{A_n \}$ be an infinite sequence of events. An event B is called a *tail event* if knowing whether or not $A_n$  occurred for each n  determines B, but B is independent of any finite collection of $A_n$'s.
+
+#### **Example** 
+
+$P(\{A_n  \text{i.o.}\}) is a tail event.
+
+**Theorem (Kolmogorov's 0-1 law)**
+
+Let B be a tail event of the sequence $\{A_n \}$. Then P(B) is either 0 or 1.

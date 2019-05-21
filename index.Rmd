@@ -1,0 +1,63 @@
+---
+title: ESMA 6600 Theory of Probability
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  html_document: default
+  pdf_document:
+    fig_caption: no
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+# General Information
+
+0.1&nbsp;  [ESMA6600.pdf](ESMA6600.pdf)  
+0.2&nbsp;  [Syllabus](syl.html)  
+0.3&nbsp;  [Assignments](assign.html)  
+0.4&nbsp;  [Resma3.RData](http://academic.uprm.edu/wrolke/Resma3/Resma3.RData?Ver 3.2) (Ver 3.2)
+
+
+# Probability
+
+1.1&nbsp;  [Fundamentals](prob.intro.html)  
+1.2&nbsp;  [Basic Theorems](basic.theorems.html)  
+1.3&nbsp;  [Conditional Probability and Independence](conditional.html)  
+1.4&nbsp;  [Combinatorics](combinatorics.html)  
+1.5&nbsp;  [Random Variables](random.variables.html)  
+1.6&nbsp;  [Random Vectors](random.vectors.html)  
+1.7&nbsp;  [Expectation and Covariance](expectation.html)  
+1.8&nbsp;  [Transformations](transformations.html)
+
+# Standard Probability Distributions
+
+2.1&nbsp;  [Discrete Distributions](discrete.html)  
+2.2&nbsp;  [Continuous Distributions](continuous.html)  
+2.3&nbsp;  [Normal Distribution](normal.html)
+
+# Inequalities and Limit Theorems
+
+4.1&nbsp;  [Inequalities](inequalities.html)  
+4.2&nbsp;  [Limit Theorems](limits.html)  
+4.3&nbsp;  [Central Limit Theorems](clt.html)  
+4.4&nbsp;  [Law of Iterated Logarithm](iterated.logarithm.html)  
+4.5&nbsp;  [Approximations](approximations.html)
+  
+# Statistics
+
+5.1&nbsp;  [Statistics](stat.html)  
+
+# Stochastic Processes
+
+6.1&nbsp;  [Introduction](intro.stochastic.processes.html)  
+6.2&nbsp;  [Poisson Process](poisson.process.html)  
+6.3&nbsp;  [Discrete-time Markov Chains](discrete.markov.chains.html)  
+6.4&nbsp;  [Continuous-time Markov Chains](continuous.markov.chains.html)  
+6.5&nbsp;  [Martingales](martingales.html)  
+6.6&nbsp;  [Brownian Motion](brownian.motion.html)  
+

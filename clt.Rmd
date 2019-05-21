@@ -1,0 +1,273 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+## Central Limit Theorems
+
+Recall: a random variable X is said to be normally distributed with mean $\mu$ and variance $\sigma^2$ if it has density: 
+
+![](graphs/prob59.png)
+
+We use the symbol $\Phi$ for the distribution function of a standard normal r.v., so
+
+![](graphs/limits17.png)
+
+Let $X_1 ,  X_2 , ..$ be a sequence of r.v.'s with means $E[X_i ]=\mu_i$  and sd$(X_i )=\sigma_i$. Let  $\bar{X_n}$  be the sample mean of the first n observations. Then a *central limit theorem* would assert that
+
+![](graphs/clt1.png)
+
+for all x, or that this standardized sum converges to a standard normal in distribution. 
+
+Note that plural "s" in the title. As with the laws of large number there are many central limit theorems, all with different conditions on 
+
+a. dependence between the X~i~ 's  
+b. $\mu_i$'s  
+c. $\sigma_i$'s  
+
+as a rough guide we have to have some combination of
+
+a.  not to strong a dependence  
+b.  $\mu_i \rightarrow \mu$ finite  
+c.  $\sigma_i$  goes neither to 0 nor to $\infty$ to fast
+
+`r hl()$hr()`
+
+The version of the CLT for Bernoulli rv's is famous all by itself, it is called the *DeMoivre-Laplace* theorem. It was the first CLT with a rigorous proof.
+
+**Theorem (DeMoivre-Laplace)**
+
+let $\{X_n \}$ be independent rv's with $X_i\sim Ber(p)$. Let  $S_n  = \sum_{i=1}^n X_i$  and let $Z \sim N(0,1)$ then 
+
+![](graphs/clt9.png)
+
+in distribution. 
+
+The theorem was proven by Abraham de Moivre in 1738 for the case p=1/2, and generalized to $p \ne 1/2$ by Pierre-Simon Laplace in his famous book Theorie Analytique des Probabilites, published in 1812.
+
+**proof**
+
+We begin by showing that if for a large n we let k be in the neighborhood of np, then 
+
+![](graphs/clt2.png)
+
+ We will make use Sterling's formula for n!:
+
+![](graphs/clt3.png)
+
+Now
+
+![](graphs/clt4.png)
+
+Define
+
+![](graphs/clt5.png) 
+
+and then
+
+![](graphs/clt6.png)
+
+and so we have the first term in the expression in the theorem.
+
+Next 
+
+![](graphs/clt7.png)
+
+where the last expression follows from the definition of x. 
+
+Next we will use the Taylor expansion of $\log(1\pm x)$, which says if x is close to 0 then
+
+$\log(1\pm x)  \approx  \pm x-x^2/2$
+
+so
+
+![](graphs/clt8.png)
+
+where we use the fact that as $n\rightarrow \infty$ $x\rightarrow 0$.
+
+Finally we can  show that 
+
+![](graphs/clt9.png) 
+
+in distribution. For this let 
+
+![](graphs/clt10.png)
+
+and we are done! 
+
+Notice that the proof here is still incomplete in two ways: first we did not discuss the remainder term of the Taylor polynomial and second we should have been more precise about the as $n\rightarrow \infty$ $x\rightarrow 0$ part. For a truly rigorous proof see for example the following derivation by [Steven Dunbar](http://www.math.unl.edu/~sdunbar1/ProbabilityTheory/Lessons/BernoulliTrials/DeMoivreLaplaceCLT/demoivrelaplaceclt.pdf)
+
+#### **Example** 
+
+For example say p=0.5 and x=1.0, then
+
+![](graphs/limits20.png)
+
+the following graph shows these probabilities together with $\Phi(1)$ for n=1:1:500:
+
+![](graphs/limits19.png)
+
+Here is the most basic version of a general CLT:
+
+**Theorem (Liapunov 1901) **
+
+$\{X_n \}$ are independent and identically distributed with mean $\mu$ and standard deviation $\sigma$. Moreover the mgf of X~n~  exists in an open neighborhood of 0. Then 
+
+![](graphs/limits2.png)
+
+for all $x \in \mathbb{R}$. 
+
+**proof**  
+
+We will show that the mgf's of $\sqrt{n}(\bar{X_n} -\mu)/\sigma$ converge to the mgf of a standard normal rv.
+
+Let $Y_n =(X_n -\mu)/\sigma$, then
+
+$\sqrt{n}(\bar{X_n} -\mu)/\sigma =  1/\sqrt{n} \sum Y_i$ 
+
+so
+
+![](graphs/limits4.png)
+
+We now expand this into a Taylor series:
+
+![](graphs/limits5.png)
+
+because EY^0^=E1=1, EY^1^=0 and EY^2^=1.
+
+An application of Taylor's theorem shows the remainder term
+
+$nR(t/\sqrt{n})$ goes to 0 as $n\rightarrow \infty$. So
+
+![](graphs/limits6.png)
+
+where we use a well-known lemma from real analysis: if $a_n \rightarrow a$, then $(1+a_n /n)^n\rightarrow e^a$.
+
+#### **Example** 
+
+Maybe the most important quantity in Statistics is the **sample mean** $\bar{X}=1/n\sum X_i$ . Here is an example: say the ages of people in a town have some distribution with mean 31.37 and standard deviation 12.34. If we randomly select a person, what is the probability that person is over 35 years old?
+  
+We have a rv X with $\mu=31.37$ and $\sigma=12.34$. We want 
+P(X>35.0) but we don't know the density of X, so there is no way to do this. 
+  
+Let's say we could sample 25 people, what is the probability that their mean age is over 35? Now we want 
+
+$P(\bar{X}>35.0)$
+
+and we have 
+
+![](graphs/limits1.png)
+
+#### **Example** 
+
+Say we want to do a mail survey, that is we send letters with questionnaires to randomly selected people and hope they fill it out and send it back. From long experience it is known that such surveys have a "return rate" of about 25\%, that is only 1 in 4 people send their survey back. How many surveys do we need to send out to be 99\% sure to get more than 100 back?
+  
+Say we send out n questionnaires. Let the rv X be the number of questionnaires we get back, then $X \sim Bin(n,0.25)$. We need to solve the equation P(X>100) = 0.99.
+
+How do we find n? Note that 
+
+$\mu_X  = np = 0.25n$ and  
+$\sigma_X  = \sqrt{npq} = \sqrt{n0.25\times 0.75} = 0.433\sqrt{n}$
+  
+and so $X \sim N(0.25n,0.433\sqrt{n})$
+  
+We need n such that 
+
+$0.99 = P(X>100) = 1-P(X\le 100)$
+
+or 
+
+$P(X \le 100)=0.01$
+
+so
+
+![](graphs/discrete13.png)
+
+and so
+
+$(100-0.25n)/(0.433\sqrt{n}) = \Phi^{-1}(0.01) = -2.326$
+
+now:
+
+![](graphs/discrete14.png)
+
+which gives either n=(51.0144-10.12)/0.125=327 or n=(51.0144+10.12)/0.125=489.
+
+So the quadratic equation gives us two possible solutions, so let's check which one is right. We find 
+
+$\Phi((327-100)/0.25)=0.9906$   
+$\Phi((489-100)/0.25)=0.0103$
+
+so we see n=489 is the correct answer.
+
+This solution  is quite general. Say this company sends out questionnaires all the time, but with different return rates p, different desired number of returns m and a different probability p~m~  of at least m returns. Repeating the above calculation for this general case we find
+
+![](graphs/discrete15.png)
+
+`r hl()$hr()`
+
+As we saw above, the CLT is really a family of theorems, all with the same conclusion but with different assumptions. In fact, there are probably a 1000 different CLT's! Here is what is probably the most famous of them:
+
+**Theorem (Lindeberg-Feller 1922)**
+
+let X~n~  be independent random variables with E[X~n~ ]=0 and Var(X~n~ )=$\sigma_n^2< \infty$. Let 
+
+![](graphs/clt11.png)
+
+then if 
+
+$\Lambda_n (\epsilon)\rightarrow 0$ as $n\rightarrow \infty$ 
+for any $\epsilon >0$, S~n~/s~n~  converges to a standard normal in distribution. 
+
+Note: The condition on $\Lambda_n (\epsilon)$ of the theorem is known as the *Lindeberg condition*. Feller showed that it is in some sense not only necessary but also sufficient. In that sense it is the ultimate CLT for independent rv's. 
+
+#### **Example** 
+
+Say Y~1~ , Y~2~ ,..iid with mean $\mu$ and sd $\sigma$. Set X~i~ =Y~i~ -$\mu$. Now
+
+![](graphs/clt12.png)
+
+but the left term converges to $\sigma^2$, so the right term has to converge to 0. 
+    
+
+#### **Example** 
+
+The CLT has found applications in just about any field of mathematics or science. Here is an application in number theory:
+
+**Erdos-Kac CLT**
+
+Say we pick an integer at random from \{1,2,..,n\}. Then the integer has about $\log\log(n)+\Phi(\sqrt{\log\log(n)})$ prime divisors.
+
+`r hl()$hr()`
+
+In all approximation theorems like the central limit theorem a major issue is always how good the approximation is for finite n, that is in a specific case how far we still are from the limit. The following theorem gives some answers: 
+
+**Theorem (Berry-Esseen)**
+
+Let $X_1, X_2, ..$ be iid rv with $E[X_1 ]=0, Var(X_1 )=\sigma^2$ and $E[|X_1 |^3]=\rho<\infty$, then if F~n~  is the cdf of $\sqrt{n}S_n /\sigma$ we have
+
+![](graphs/limits25.png)
+
+Calculated values of the constant C have decreased markedly over the years, from the original value of 7.59 by Esseen (1942), to 0.7882 by van Beek (1972), then 0.7655 by Shiganov (1986), then 0.7056 by Shevtsova (2007), then 0.7005 by Shevtsova (2008), then 0.5894 by Tyurin (2009), then 0.5129 by Korolev & Shevtsova (2009), then 0.4785 by Tyurin (2010). The detailed review can be found in the papers Korolev & Shevtsova (2009), Korolev & Shevtsova (2010). The best estimate as of 2012 is C=0.4748.
+
+#### **Example** 
+say $Z_i  \sim Ber(p)$, and let $X_i =Z_i /p-1$, then
+
+![](graphs/limits26.png)
+
+If p=1/2 the bound is 0.4748. As p gets close to 0, or 1 the bound goes to $\infty$.
+
+Here are four examples:
+
+![](graphs/limits40.png) 

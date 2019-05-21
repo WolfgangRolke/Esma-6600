@@ -1,0 +1,303 @@
+---
+header-includes: \usepackage{color}
+                 \usepackage{float}
+output:
+  pdf_document:
+    fig_caption: no
+  html_document: default
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+## Functions of a Random Variable - Transformations
+
+#### **Example** 
+
+say $X \sim$ U[0,1] and $\lambda>0$. What is the pdf of the random variable $Y=-\lambda \log(X)$?
+
+Solution: we first find the cdf and then the pdf as follows:
+
+![](graphs/prob61.png)
+
+if y>0. For $y<0$ note that $P(-\log X<y) = 0$ because $0<X<1$, so $\log X<0$, so $-\log X>0$ always.
+
+This is an  example  of a function (or *transformation*) of a random variable. These transformations play a major role in probability and statistics. We will see how to find their pdf's  on a few  examples.
+
+#### **Example** 
+
+say X is the number of roles of a fair die until the first six. We have already seen that P(X=x) = 1/6*(5/6)^x-1^, x=1,2,.. Let Y be 1 if X is even, 0 otherwise. Find the pdf of Y.
+
+Note: here both X and Y are discrete.
+
+Solution:
+
+![](graphs/prob62.png)
+
+and P(Y=0) = 1 - P(Y=1) = 5/11
+
+#### **Example**  
+
+say X is a continuous r.v with pdf 
+
+$f_X (x) = \frac12 \exp(-|x|) \text{, } x \in \mathbb{R}$ 
+
+(this is called a double exponential) 
+
+Let Y=I_[-1,1] (X). Find the pdf of Y.
+
+Note: here X is continuous and Y is discrete.  
+
+![](graphs/prob63.png)
+
+#### **Example**  
+
+again let X have pdf $f_X (x) = \frac12 \exp(-|x|)$. Let Y =X^2^. Then for $y<0$ we have $P(Y \le y) = 0$. So let y>0. Then
+
+![](graphs/prob64.png)
+
+#### **Example**  
+
+Let $X \sim$ U[0,2],  and let $Y=\sin(2 \pi X)$. Find f~Y~ (y).
+
+First of course we always have $-1 \le \sin(x) \le 1$ and therefore F~Y~ (y)=0 if y<1 and F~Y(y)=1 if y>1.
+
+Now if -1<y<1 we have
+
+$P(Y \le y)=P(\sin(2 \pi X) \le y)$
+
+the hard part is solving the inequality 
+
+$\sin(2 \pi X) \le y$ 
+
+The points were we have $\sin(2 \pi X) = y$ are of course $y=\arcsin(y)/2/\pi$. Let $a=\arcsin(y)/2/\pi$ and note that arcsin(-y)=-arcsin(y).
+
+Consider the case y=-0.3, then $\arcsin(-0.3)/2/\pi = -0.0485$
+
+![](graphs/prob621.png)
+  and therefore 
+
+![](graphs/prob622.png)
+
+Similarly for 0<y<1 we get 
+
+![](graphs/prob617.png)
+
+if |y|<1 
+
+Notice that arcsin is a strictly increasing function, so its derivative is positive. Also  
+
+$$
+\begin{aligned}
+&\lim_{y \rightarrow -\infty}F_Y(y)    = \lim_{y \rightarrow -\infty} \left[ \arcsin(y)/\pi+1/2 \right] =0\\
+&\lim_{y \rightarrow \infty}F_Y(y)    = \lim_{y \rightarrow \infty} \left[ \arcsin(y)/\pi+1/2 \right] = 1
+\end{aligned}
+$$
+
+`r hl()$hr()`
+
+Next up some  examples of functions of random vectors:
+
+#### **Example** 
+
+Say (X,Y) is a discrete rv with joint pdf f~X,Y~(x,y)=(1-p)^2^p^x^, x,y in \{0,1,..\}, $y \le x$, and 0<p<1. Let U=X and V=X-Y. Find f~U,V~ (u,v).
+
+First what are the possible values of (U,V)? We have $u= x \in \{0,1,..\}$ and  $y \le x$ or $0 \le x-y=v$ and so $v \in \{0,1,..\}$.
+
+Finally $v=x-y=u-y \le u$ because $y \ge 0$.
+
+Now for any $(u,v)  \in \{0,1,..\}$ with $v \le u$ we have 
+
+f~U,V~ (u,v) =  
+P(U=u,V=v) =  
+P(X=u,X-Y=v) =  
+P(X=u,u-Y=v) =  
+P(X=u,Y=u-v) =  
+(1-p)^2^p^u^
+
+So we see that f~U,V~ (u,v)=f~X,Y~ (u,v), or (X,Y) has the same distribution as (U,V)!
+
+`r hl()$hr()`
+
+Before we go on let's revisit the first example above, where we had $X \sim$ U[0,1], $\lambda>0$ and $Y=-\lambda \log(X)$. We found $f_Y (y) =1/\lambda \exp(-y/\lambda)$ Now let $g(x)=- \lambda \log(x)$ and notice that g is strictly decreasing. Then
+
+![](graphs/prob618.png)
+
+This can be generalized as follows:
+
+**Lemma**
+
+Let X be a continuous rv with cdf F, and F is strictly increasing. Then $F(X) \sim$ U[0,1].
+
+**proof**
+
+F is strictly increasing, therefore F^-1^ exists, and so 
+
+$P(F(X) \le x) = P(X \le F^{-1}(x)) =F(F^{-1}(x)) = x$
+
+and even a bit more:
+
+**Theorem (Probability Integral Transform)**  
+
+Let X be a continuous rv with cdf F. Then $F(X) \sim$ U[0,1]
+
+**proof** let F be the cdf and define the generalized inverse function $F^*$ by 
+
+$$F^*(x) = \min\{t : F(t) \ge x \}$$
+
+First note that if F is strictly increasing we have $F^*=F^{-1}$.
+
+Moreover we have F(F*(x))=x. This is easiest to see whith a graph:
+ 
+![](graphs/geninf.png) 
+
+Now the proof is the same as the one for the lemma!  
+ 
+`r hl()$hr()`
+
+In one dimension this is rarely useful, it is usually easier to just do the problem directly as above. It does become useful in higher dimensions.
+
+#### **Example**  
+
+say (X,Y) is a bivariate standard normal r.v, that is it has joint density given by
+  
+$$f(x,y)=\frac1{2\pi}\exp\left\{-\frac12(x^2+y^2) \right\}$$
+
+for $(x,y)  \in  \mathbb{R}^2$
+  
+Let the r.v. (U,V) be defined by U=X+Y and V=X-Y. Find the joint pdf of (U,V).
+
+To start let's define the functions g~1~ (x,y) = x+y and  g~2~ (x,y) = x-y, so that U=g~1~ (X,Y) and V = g~2~ (X,Y).
+
+For what values of u and v is f_(U,V) (u,v) positive? Well, for any values for which the system of 2 linear equations in two unknowns u=x+y and v=x-y has a solution. These solutions are 
+
+x = h~1~ (u,v) = (u + v)/2
+y = h~2~ (u,v) = (u - v)/2
+
+From this we find that for any $(u,v)  \in  \mathbb{R}^2$ there is a unique $(x,y)  \in  \mathbb{R}^2$ such that u=x+y and v=x-y. So the transformation $(x,y) \rightarrow (u,v)$ is one-to-one and therefore has a Jacobian given by
+
+![](graphs/prob66.png)
+
+Now from multivariable calculus we have the following:
+
+![](graphs/prob67.png)
+
+Note that the density factors into a function of u and a function of v. As we saw beforethis means that U and V are independent.
+
+#### **Example**
+
+Say X~1~ , .., X~n`  are iid U[0,1] Let Y~1~ =X~1~ , Y~2~ =X~2~ -X~1~ ,..,Y~n~ =X~n~ -X~n-1~. Now 
+
+![](graphs/prob619.png)
+
+so (Y~1~ , .., Y~n~ ) is uniform. But careful, uniform on what set?
+y~2~ =x~2~ -x~1~ , $0 \le x_i  \le 1$, therefore $-1 \le y_2  \le 1$.
+
+We have
+
+$0  \le  y_1   \le  1$  
+$-y_k-1   \le  y_k   \le  1-y_k-1$, k=2,..,n
+
+For n=2 the set is shown here:
+
+![](graphs/prob620.png) 
+
+#### **Example**   
+
+A rv X is called a normal (or Gaussian) rv with mean $\mu$ and standard deviation $\sigma$ if it had density
+
+$$f(x)=\frac1{\sqrt{2\pi \sigma^2}}\exp\left\{ \frac{(x-\mu)^2}{2\sigma^2}\right\}$$
+
+a special case is a** standard normal rv**, which has $\mu=0$ and $\sigma=1$.
+
+Say X and Y are independent standard normal rv's. Let Z = X + Y. Find the pdf of Z.
+
+Note: now we have a transformation from  $\mathbb{R}^2 \rightarrow \mathbb{R}$. 
+
+
+Z = X + Y = U in the  example  above, so the pdf of Z is just the marginal of U and we find
+
+![](graphs/prob68.png)
+
+Say X and Y are two continuous independent r.v with pdf f's f~X~  and f~Y` , and let Z = X+Y. If we repeat the above calculations we can show that in general the pdf of Z is given by
+
+![](graphs/prob69.png)
+
+This is called the *convolution formula*. 
+
+There is a second method for deriving the convolution formula which is useful, using the law of total probability for rv's:
+
+![](graphs/prob611.png)
+
+#### **Example** 
+
+say X and Y are independent exponential rv's with rate $\lambda$. Find the pdf of Z=X+Y
+
+![](graphs/prob613.png)
+
+#### **Example** 
+
+Say (X,Y) is a discrete rv with joint pdf f~X,Y~ (x,y)=(1-p)^2^p^x^, $x,y \in \{0,1,..\}, y \le x, 0<p<1$. 
+
+Let U=I(X=Y). Find f~U~ (u)
+
+![](graphs/prob616.png)
+
+#### **Example**
+
+Say X~1~ , .., X~n`  are iid U[0,1]. Let M=max\{X~1~ , .., X~n~ \}. 
+
+Find E[M] and Var(M).
+
+First we find f~M~
+
+![](graphs/prob610.png)
+
+Now
+
+![](graphs/prob615.png)
+
+This is a special case of what are called *Order Statistics*. Many statistical methods, for example the median and the range, are based on an ordered data set.
+
+One of the difficulties when dealing with order statistics are ties, that is the same observation appearing more than once. This should only occur for discrete data because for continuous data the probabiltity of a tie is zero. They may happen anyway because of rounding, but we will ignore them in what follows.
+
+Say X~1~, .., X~n~ are iid with density f. Then X~(i)~ is the i^th^ order statistics if X~(1)~<  ... < X~(i)~ < ... <X~(n)~.
+
+
+Note X~(1)~ = min \{X~i~\} and X~(n)~ = max \{X~i~}.
+
+Let's find the pdf of X~(i)~. For this let Y be a r.v. that counts the number of $X_j \le x$ for some fixed number x. We will see
+shortly that if p=F(x) 
+
+![](graphs/prob626.png)
+
+Note also that the event $\{Y \ge i\}$ means that more than i observations are less or equal to x, so the i^th^ largest is less or equal to x. Therefore 
+
+![](graphs/prob623.png" >
+  
+with that we find 
+
+![](graphs/prob624.png)
+
+#### **Example**  
+
+Say X~1~, .., X~n~ are iid U[0,1]. Then for 0<x<1 we have f(x)=1 and F(x)=x. Therefore 
+
+![](graphs/prob625.png)
+
+#### **Example**  
+
+Say X~1~, .., X~n~ are iid U[0,1]. Let g be the density of the order statistic (X~(1)~, .., X~(n)~). Then
+
+g(x~(1)~, ..,x~(n)~)=n! for 0<x~(1)~< ..<x~(n)~<1
+
+The simple "proof" is as follows: for any set of n distinct numbers there are n! permutations, exactly one of which has 0<x~(1)~< ..<x~(n)~<1.
+
+A "formal" proof can be done using a generalization of the change of variables formula. The problem is that the inverse transform is not unique, in fact there are n! of them because the ordered set of numbers could have come from any of the n! permutations. Once the inverse transform is fixed, though, the Jacobian is just the identity matrix with the rows rearranged, and therefore has determinant 1. Then
+
+g(x~(1)~, ..,x~(n)~) = n!f(x~1~, ..,x~n~)|J| = n! 
+
