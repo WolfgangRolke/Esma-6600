@@ -1,10 +1,9 @@
 ---
-header-includes: \usepackage{color}
-                 \usepackage{float}
+header-includes: \usepackage{color} \usepackage{float}
 output:
+  html_document: default
   pdf_document:
     fig_caption: no
-  html_document: default
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -21,7 +20,7 @@ P(A)=n(A)/n(S), so finding probabilities means counting the number of outcomes i
 
 ### Fundamental Theorem of Counting
 
-**Theorem**  (Fundamental Theorem of Counting)**
+**Theorem**  (Fundamental Theorem of Counting)
 
 If a job consists of k separate tasks, the i^th^ of which can be carried out in n~i~  ways, the entire job can be done in $n_1 \times n_2 \times..\times n_k$  ways
 

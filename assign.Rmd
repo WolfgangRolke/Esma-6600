@@ -1,0 +1,27 @@
+---
+title: Assignments
+header-includes: \usepackage{color}
+                  \usepackage{float}
+output:
+  html_document: default
+  pdf_document:
+    fig_caption: no
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("../R/setup.rmd.R", local=TRUE)
+setup.rmd(local.env=environment())
+```
+`r hl()$basefontsize()`
+`r hl()$style()`
+
+[Homework 1](hw1.html) [Solution](hw1sol.html)   
+[Homework 2](hw2.html) [Solution](hw2sol.html)  
+[Homework 3](hw3.html) [Solution](hw3sol.html)  
+[Homework 4](hw4.html) Thursday Sept. 26  
+[Homework 5](hw5.html) Thursday Oct. 3
+
+Midterm: Thursday October 3???
+
+
+

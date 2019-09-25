@@ -2,9 +2,9 @@
 header-includes: \usepackage{color}
                  \usepackage{float}
 output:
+  html_document: default
   pdf_document:
     fig_caption: no
-  html_document: default
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -18,7 +18,7 @@ setup.rmd(local.env=environment())
 
 A random vector is a multi-dimensional random variable.
 
-#### **Example 1** 
+#### **Example** 
 
 we roll a fair die twice. Let X be the sum of the rolls and let Y be the absolute difference between the two rolls. Then (X,Y) is a 2-dimensional random vector. The joint pdf of (X,Y) is given by:
 
@@ -81,9 +81,9 @@ so c=2
 
 #### **Example** 
 
-Let's extend the idea of a uniform random variable to two dimensions. To begin, let's start with the unit square [0,1]~2~.
+Let's extend the idea of a uniform random variable to two dimensions. To begin, let's start with the unit square [0,1]^2^.
 
-Again, the idea of uniform is taken to mean that the probability of a point (X,Y) being in some area is proportional to the size of the area. Therefore if A is some area in [0,1]~2~ we have
+Again, the idea of uniform is taken to mean that the probability of a point (X,Y) being in some area is proportional to the size of the area. Therefore if A is some area in [0,1]^2^ (which has total area 1), we have
 
 $P((X,Y)  \in  A) = \text{area}(A)$
 
@@ -162,9 +162,9 @@ let (X,Y) be a r.v. with joint pdf f(x,y) and marginal  f~Y~ . For any y such th
   
 $$f_{X|Y=y}(x|y) = \frac{f(x,y)}{f_Y(y)}$$
 
-Note that a conditional pdf requires a specification for a value of the random variable on which we condition, something like f_X|Y=y . An expression like f_X|Y  is not defined!
+Note that a conditional pdf requires a specification for a value of the random variable on which we condition, something like $f_{X|Y=y}$ . An expression like $f_{X|Y}$  is not defined!
 
-Note that is is exactly the same as the definition for conditional probabilities of events. For example if (X,Y) is a discrete rv, then
+Note that this is exactly the same as the definition for conditional probabilities of events. For example if (X,Y) is a discrete rv, then
 
 ![](graphs/prob331.png)
 
@@ -194,7 +194,7 @@ Again, note that a conditional pdf is a proper pdf:
 
 #### **Example** 
 
-Say (X,Y,Z) is a continuous rv with f(x,y,z) = 2(x+y)z if $0<x,y,z<1$ and 0 otherwise. Then all the marginals are:
+Say (X,Y,Z) is a continuous rv with f(x,y,z) = 2(x+y)z if $0<x,y,z<1$ and 0 otherwise. Then all the conditional pdf's are:
 
 ![](graphs/prob336.png)
 
@@ -204,71 +204,6 @@ say $f(x,y)=\alpha+1$ if $0<x<y^\alpha<1$. Find the marginals and the conditiona
 
 ![](graphs/prob343.png) 
 
-### Independence
-
-**Definition**
-
-Two r.v. X and Y are said to be independent iff 
-
-$$f_{X,Y} (x,y)=f_X (x)f_Y (y)$$
-
-for all x,y 
-
-Notation: we will use the notation $X \perp Y$ if X and Y are independent. 
-
-#### **Example** 
-
-Say X is the sum and Y is the absolute difference of two dice. Previously we found 
-
-f~X,Y~ (7,1) = 1/18 
-
-but 
-
-f~X~ (7)f~Y~ (1) = 1/6 x 10/36 = 5/108
-
-so X and Y are not independent
-
-**Theorem**
-
-say f(x,y) is the joint pdf of a random vector (X,Y). Then X and Y are independent if there exist functions g and h such that
-
-f(x,y)=g(x)h(y)
-
-**proof**
-
-the only difference between the definition and the theorem is that g and h need not be proper densities. But  first of all we can assume that g and h are non-negative, otherwise just take |g| and |h|.
-
-Moreover 
-
-![](graphs/prob348.png)  
-
- where $0<c<\infty$, so g/c = f~X~  , and similarly h/d=f~Y~
- 
-#### **Example** 
-
-say f(x,y)=exp(-x-y), x,y>0. Then 
-
-f(x,y) = exp(-x-y) = exp(-x)exp(-y) = g(x)h(y)
-
-so X and Y are independent.  
-
-`r hl()$hr()`
-
-Mostly the concept of independence is used in reverse: we assume X and Y are independent (based on good reason!) and then make use of the formula:
-
-
-#### **Example** 
-Say we use the computer to generate 10 independent exponential r.v's with rate $\lambda$. What is the probability density function of this random vector? 
-  
-We have $f_{X_i}(x_i )=\lambda \exp(-\lambda x_i )$  for i=1,2,..,10 so 
-  
-$$
-\begin{aligned}
-&f_{(X_1 ,..,X_{10} )} (x_1 , .., x_10 )    = \\
-&\lambda \exp(- \lambda x_1 ) \times..\times  \lambda \exp(- \lambda x_10 )    = \\
-&\lambda^{10}\exp(-\lambda(x_1 +..+x_{10} ))
-\end{aligned}
-$$
 
 #### **Example** 
 
@@ -279,7 +214,6 @@ df <- data.frame(x=c("1/10", "1/10", "1/10"),
                  y=c("1/10", "1/2", "1/10"))
 colnames(df) <- 1:2
 rownames(df) <- 1:3
-df
 kable.nice(df)
 ```
 Find the conditional pdf of X|Y=y
@@ -420,3 +354,69 @@ back to the example above with the "device". Now we have the following solution:
 again the example above with the "device", but now the rate X has a uniform distribution on [0,1], that is f~X~ (x)=1 if $0<x<1$. Then:
 
 ![](graphs/prob338.png)
+
+### Independence
+
+**Definition**
+
+Two r.v. X and Y are said to be independent iff 
+
+$$f_{X,Y} (x,y)=f_X (x)f_Y (y)$$
+
+for all x,y 
+
+Notation: we will use the notation $X \perp Y$ if X and Y are independent. 
+
+#### **Example** 
+
+Say X is the sum and Y is the absolute difference of two dice. Previously we found 
+
+f~X,Y~ (7,1) = 1/18 
+
+but 
+
+f~X~ (7)f~Y~ (1) = 1/6 x 10/36 = 5/108
+
+so X and Y are not independent
+
+**Theorem**
+
+say f(x,y) is the joint pdf of a random vector (X,Y). Then X and Y are independent if there exist functions g and h such that
+
+f(x,y)=g(x)h(y)
+
+**proof**
+
+the only difference between the definition and the theorem is that g and h need not be proper densities. But  first of all we can assume that g and h are non-negative, otherwise just take |g| and |h|.
+
+Moreover 
+
+![](graphs/prob348.png)  
+
+ where $0<c<\infty$, so g/c = f~X~  , and similarly h/d=f~Y~
+ 
+#### **Example** 
+
+say f(x,y)=exp(-x-y), x,y>0. Then 
+
+f(x,y) = exp(-x-y) = exp(-x)exp(-y) = g(x)h(y)
+
+so X and Y are independent.  
+
+`r hl()$hr()`
+
+Mostly the concept of independence is used in reverse: we assume X and Y are independent (based on good reason!) and then make use of the formula:
+
+
+#### **Example** 
+Say we use the computer to generate 10 independent exponential r.v's with rate $\lambda$. What is the probability density function of this random vector? 
+  
+We have $f_{X_i}(x_i )=\lambda \exp(-\lambda x_i )$  for i=1,2,..,10 so 
+  
+$$
+\begin{aligned}
+&f_{(X_1 ,..,X_{10} )} (x_1 , .., x_10 )    = \\
+&\lambda \exp(- \lambda x_1 ) \times..\times  \lambda \exp(- \lambda x_10 )    = \\
+&\lambda^{10}\exp(-\lambda(x_1 +..+x_{10} ))
+\end{aligned}
+$$

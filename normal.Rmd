@@ -18,12 +18,12 @@ setup.rmd(local.env=environment())
 
 ### Normal Distribution
 
-X is said to have a normal distribution with mean $\mu$ and variance $\sigma$^2 ($X \sim N(\mu,\sigma)$) if it has density
+X is said to have a normal distribution with mean $\mu$ and variance $\sigma^2$ ($X \sim N(\mu,\sigma)$) if it has density
 
 $$f(x)=\frac1{\sqrt{2\pi \sigma^2}}\exp\left\{\frac1{2\sigma^2}(x-\mu)^2 \right\}$$
 
 
-If $\mu=0$ and $\sigma=1$ it is called a standard normal, and often denoted by Z instead of X.
+If $\mu=0$ and $\sigma=1$ it is called a *standard normal rv*, and often denoted by Z instead of X.
   
 **Careful**: some papers and textbooks define the normal as $X  \sim  N( \mu , \sigma^2)$, that is they use the variance instead of the standard deviation.
 
@@ -41,13 +41,15 @@ one consequence of this theorem is that we can often do a proof for the standard
 
 **Theorem** 
 
-show that the function above is indeed a pdf for all $\mu$ and $\sigma >0$.
+The function above is indeed a pdf for all $\mu$ and $\sigma >0$.
 
 **proof**
   
--  $f(x) \ge 0$ for all $x$
+-  $f(x) \ge 0$ for all $x$ is obvious.
   
-- first we show this for a standard normal:
+- $\int_{-\infty}^\infty f(x)dx=1$
+
+first we show this for a standard normal:
  
 ![](graphs/cont17.png)
 
@@ -208,6 +210,7 @@ Then $f(x) \ne 0$ for each x because exp(-(x-X)^2^>0. Moreover all derivatives e
 Now
 
 ![](graphs/norm4.png)
+ 
 so f is the density of X+Z.
 
 Now for the finish of Bernstein's theorem: First we change notation and use rv's X~1~  and X~2~ . So we know X~1~  and X~2~ 

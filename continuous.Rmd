@@ -2,9 +2,9 @@
 header-includes: \usepackage{color}
                  \usepackage{float}
 output:
+  html_document: default
   pdf_document:
     fig_caption: no
-  html_document: default
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -33,6 +33,7 @@ we write $X  \sim  Exp( \lambda )$
 Note
 
 ![](graphs/cont2.png)
+
 The "trick" we used here, namely showing a result for a special case ($\lambda =1$) and then doing the general case, is often a good idea! Let's use it again to find the moment generating function:
 
 ![](graphs/cont25.png)
@@ -45,7 +46,7 @@ We have previously talked about the memoryless property, and the fact that among
 
 X has an exponential distribution iff X is a positive continuous r.v. and 
 
-$P(X>s+t | X>s) = P(X>t) for all s,t > 0$
+$P(X>s+t | X>s) = P(X>t)$ for all $s,t > 0$
 
 **proof**: 
 
@@ -55,13 +56,13 @@ Assume $X  \sim  Exp( \lambda )$. Then
 
 on the other hand assume X is continuous with density f and 
 
-$P(X>s+t | X>s) = P(X>t) for all s,t > 0$
+$P(X>s+t | X>s) = P(X>t)$ for all $s,t > 0$
 
 Above we saw that this implies 
 
-$P(X>s+t)=P(X>s)*P(X>t)$
+$P(X>s+t)=P(X>s)P(X>t)$
 
-Let h(x) = P(X>x) and let $\epsilon >0$. Note h(0) = P(X>0) = 1 because X is positive. 
+Let $h(x) = P(X>x)$ and let $\epsilon>0$. Note $h(0) = P(X>0) = 1$ because X is positive. 
 
 ![](graphs/cont4.png) 
 
@@ -104,6 +105,7 @@ Another important special case is if $X  \sim   \Gamma (n/2,2)$, then X is calle
 Find the kurtosis of X where $X  \sim  Exp( \lambda )$
 
 ![](graphs/cont28.png)
+
 so the kurtosis is greater than 0, therefore an exponential is leptocurtic.
 
 `r hl()$hr()`
@@ -141,7 +143,7 @@ The mgf is given by
 
 Note that the Taylor expansion of the moment generating function is completely general. 
 
-By definition we have 0<X<1, and so the Beta is the basic example  of a r.v. on [0,1], or a little more general (using a change of variables) on any open finite interval. 
+By definition we have $0<X<1$, and so the Beta is the basic example  of a r.v. on [0,1], or a little more general (using a change of variables) on any open finite interval. 
 
 Special cases:
 

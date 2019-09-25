@@ -36,9 +36,17 @@ Note: here both X and Y are discrete.
 
 Solution:
 
-![](graphs/prob62.png)
+let's do this a little more general, with p instead of 1/6. Also let q=1-p=5/6. Then 
 
-and P(Y=0) = 1 - P(Y=1) = 5/11
+$$
+\begin{aligned}
+&P(Y=0)  = P(X \in \{1, 3, 5, ..\}) =\\
+&\sum_{k=0}^\infty pq^{(2k+1)-1}  =  p \sum_{k=0}^\infty q^{2k} = \\
+&p \sum_{k=0}^\infty (q^2)^{k} = p\frac1{1-q^2} =\\
+&p\frac1{(1+q)(1-q)} = \frac1{1+q}
+\end{aligned}
+$$
+so $P(Y=0) = 1/(1+5/6) = 6/11$ and $P(Y=1) = 1 - P(Y=1) = 5/11$.
 
 #### **Example**  
 
@@ -48,7 +56,7 @@ $f_X (x) = \frac12 \exp(-|x|) \text{, } x \in \mathbb{R}$
 
 (this is called a double exponential) 
 
-Let Y=I_[-1,1] (X). Find the pdf of Y.
+Let Y=I~[-1,1]~ (X). Find the pdf of Y.
 
 Note: here X is continuous and Y is discrete.  
 
@@ -64,9 +72,9 @@ again let X have pdf $f_X (x) = \frac12 \exp(-|x|)$. Let Y =X^2^. Then for $y<0$
 
 Let $X \sim$ U[0,2],  and let $Y=\sin(2 \pi X)$. Find f~Y~ (y).
 
-First of course we always have $-1 \le \sin(x) \le 1$ and therefore F~Y~ (y)=0 if y<1 and F~Y(y)=1 if y>1.
+First of course we always have $-1 \le \sin(x) \le 1$ and therefore $F_Y (y)=0$ if $y<-1$ and $F_Y(y)=1$ if $y>1$.
 
-Now if -1<y<1 we have
+Now if $-1<y<1$ we have
 
 $P(Y \le y)=P(\sin(2 \pi X) \le y)$
 
@@ -79,15 +87,16 @@ The points were we have $\sin(2 \pi X) = y$ are of course $y=\arcsin(y)/2/\pi$. 
 Consider the case y=-0.3, then $\arcsin(-0.3)/2/\pi = -0.0485$
 
 ![](graphs/prob621.png)
-  and therefore 
+  
+and therefore 
 
 ![](graphs/prob622.png)
 
-Similarly for 0<y<1 we get 
+Similarly for $0<y<1$ we get 
 
 ![](graphs/prob617.png)
 
-if |y|<1 
+if $|y|<1$ 
 
 Notice that arcsin is a strictly increasing function, so its derivative is positive. Also  
 
@@ -104,7 +113,7 @@ Next up some  examples of functions of random vectors:
 
 #### **Example** 
 
-Say (X,Y) is a discrete rv with joint pdf f~X,Y~(x,y)=(1-p)^2^p^x^, x,y in \{0,1,..\}, $y \le x$, and 0<p<1. Let U=X and V=X-Y. Find f~U,V~ (u,v).
+Say (X,Y) is a discrete rv with joint pdf f~X,Y~(x,y)=(1-p)^2^p^x^, x,y in \{0,1,..\}, $y \le x$, and $0<p<1$. Let U=X and V=X-Y. Find f~U,V~(u,v).
 
 First what are the possible values of (U,V)? We have $u= x \in \{0,1,..\}$ and  $y \le x$ or $0 \le x-y=v$ and so $v \in \{0,1,..\}$.
 
@@ -119,11 +128,11 @@ P(X=u,u-Y=v) =
 P(X=u,Y=u-v) =  
 (1-p)^2^p^u^
 
-So we see that f~U,V~ (u,v)=f~X,Y~ (u,v), or (X,Y) has the same distribution as (U,V)!
+So we see that f~U,V~(u,v)=f~X,Y~(u,v), or (X,Y) has the same distribution as (U,V)!
 
 `r hl()$hr()`
 
-Before we go on let's revisit the first example above, where we had $X \sim$ U[0,1], $\lambda>0$ and $Y=-\lambda \log(X)$. We found $f_Y (y) =1/\lambda \exp(-y/\lambda)$ Now let $g(x)=- \lambda \log(x)$ and notice that g is strictly decreasing. Then
+Before we go on let's revisit the first example above, where we had $X \sim U[0,1], \lambda>0$ and $Y=-\lambda \log(X)$. We found $f_Y (y) =1/\lambda \exp(-y/\lambda)$. Now let $g(x)=- \lambda \log(x)$ and notice that g is strictly decreasing. Then
 
 ![](graphs/prob618.png)
 
@@ -151,7 +160,7 @@ $$F^*(x) = \min\{t : F(t) \ge x \}$$
 
 First note that if F is strictly increasing we have $F^*=F^{-1}$.
 
-Moreover we have F(F*(x))=x. This is easiest to see whith a graph:
+Moreover we have F(F*(x))=x. This is easiest to see with a graph:
  
 ![](graphs/geninf.png) 
 
@@ -171,31 +180,40 @@ for $(x,y)  \in  \mathbb{R}^2$
   
 Let the r.v. (U,V) be defined by U=X+Y and V=X-Y. Find the joint pdf of (U,V).
 
-To start let's define the functions g~1~ (x,y) = x+y and  g~2~ (x,y) = x-y, so that U=g~1~ (X,Y) and V = g~2~ (X,Y).
+To start let's define the functions g~1~(x,y) = x+y and  g~2~(x,y) = x-y, so that U=g~1~(X,Y) and V = g~2~(X,Y).
 
-For what values of u and v is f_(U,V) (u,v) positive? Well, for any values for which the system of 2 linear equations in two unknowns u=x+y and v=x-y has a solution. These solutions are 
+For what values of u and v is f~U,V~(u,v) positive? Well, for any values for which the system of 2 linear equations in two unknowns u=x+y and v=x-y has a solution. These solutions are 
 
-x = h~1~ (u,v) = (u + v)/2
-y = h~2~ (u,v) = (u - v)/2
+x = h~1~(u,v) = (u + v)/2
+y = h~2~(u,v) = (u - v)/2
 
 From this we find that for any $(u,v)  \in  \mathbb{R}^2$ there is a unique $(x,y)  \in  \mathbb{R}^2$ such that u=x+y and v=x-y. So the transformation $(x,y) \rightarrow (u,v)$ is one-to-one and therefore has a Jacobian given by
 
-![](graphs/prob66.png)
+$$
+J =\left| \begin{array}{cc}
+\frac{\partial x}{\partial u} & \frac{\partial x}{\partial v} \\
+\frac{\partial y}{\partial u} & \frac{\partial y}{\partial v} \end{array} \right| = 
+
+\left| \begin{array}{cc}
+\frac12 & \frac12 \\
+\frac12 & -\frac12 \end{array} \right| = \frac12
+$$
 
 Now from multivariable calculus we have the following:
 
 ![](graphs/prob67.png)
 
-Note that the density factors into a function of u and a function of v. As we saw beforethis means that U and V are independent.
+Note that the density factors into a function of u and a function of v. As we saw before this means that U and V are independent.
 
 #### **Example**
 
-Say X~1~ , .., X~n`  are iid U[0,1] Let Y~1~ =X~1~ , Y~2~ =X~2~ -X~1~ ,..,Y~n~ =X~n~ -X~n-1~. Now 
+Say X~1~ , .., X~n~  are iid U[0,1] Let Y~1~ =X~1~, Y~2~ =X~2~-X~1~ ,..,Y~n~=X~n~-X~n-1~. Then
 
 ![](graphs/prob619.png)
 
 so (Y~1~ , .., Y~n~ ) is uniform. But careful, uniform on what set?
-y~2~ =x~2~ -x~1~ , $0 \le x_i  \le 1$, therefore $-1 \le y_2  \le 1$.
+
+y~2~=x~2~-x~1~, $0 \le x_i  \le 1$, therefore $-1 \le y_2  \le 1$.
 
 We have
 
@@ -210,9 +228,9 @@ For n=2 the set is shown here:
 
 A rv X is called a normal (or Gaussian) rv with mean $\mu$ and standard deviation $\sigma$ if it had density
 
-$$f(x)=\frac1{\sqrt{2\pi \sigma^2}}\exp\left\{ \frac{(x-\mu)^2}{2\sigma^2}\right\}$$
+$$f(x)=\frac1{\sqrt{2\pi \sigma^2}}\exp\left\{- \frac{(x-\mu)^2}{2\sigma^2}\right\}$$
 
-a special case is a** standard normal rv**, which has $\mu=0$ and $\sigma=1$.
+a special case is a **standard normal rv**, which has $\mu=0$ and $\sigma=1$.
 
 Say X and Y are independent standard normal rv's. Let Z = X + Y. Find the pdf of Z.
 
@@ -223,21 +241,50 @@ Z = X + Y = U in the  example  above, so the pdf of Z is just the marginal of U 
 
 ![](graphs/prob68.png)
 
-Say X and Y are two continuous independent r.v with pdf f's f~X~  and f~Y` , and let Z = X+Y. If we repeat the above calculations we can show that in general the pdf of Z is given by
+and we see that Z has a normal distribution with $\mu=0$ and $\sigma=\sqrt2$.
 
-![](graphs/prob69.png)
+Say X and Y are two continuous independent r.v with pdf f's f~X~  and f~Y~ , and let Z = X+Y. If we repeat the above calculations we can show that in general the pdf of Z is given by
+
+$$f_Z(z)=\int_{-\infty}^\infty f_X(t)f_Y(z-t)dt$$
 
 This is called the *convolution formula*. 
 
-There is a second method for deriving the convolution formula which is useful, using the law of total probability for rv's:
+There is a second method for deriving the convolution formula which is useful. It uses a continuous analog to the law of total probability:
 
-![](graphs/prob611.png)
+In the setup from above we have 
+
+$$
+\begin{aligned}
+&F_{X+Y}(z)    = P(X+Y\le z) =\\
+&\int_{-\infty}^\infty P(X+Y\le z|Y=y)f_Y(y)dy    = \\
+&\int_{-\infty}^\infty (X\le z-y|Y=y)f_Y(y)dy   =  \\
+&\int_{-\infty}^\infty F_{X|Y=y}(z-y|y)f_Y(y)dy     \\
+&f_Z(z)    = \frac{d}{dz} F_Z(z) =\\
+&\frac{d}{dz} \int_{-\infty}^\infty F_{X|Y=y}(z-y|y)f_Y(y)dy =\\
+&\int_{-\infty}^\infty \frac{d}{dz} F_{X|Y=y}(z-y|y)f_Y(y)dy = \\
+&\int_{-\infty}^\infty f_{X|Y=y}(z-y|y)f_Y(y)dy = \\
+&\int_{-\infty}^\infty f_{X}(z-y)f_Y(y)dy \\
+\end{aligned}
+$$
+
+and here we used the independence only at the very end, the formula above also holds in general.
+
+The tricky part of this is the interchange of the derivative and the integral. Working with densities and cdfs usually means they are ok.
+
 
 #### **Example** 
 
 say X and Y are independent exponential rv's with rate $\lambda$. Find the pdf of Z=X+Y
 
-![](graphs/prob613.png)
+$$
+\begin{aligned}
+&f_Z(z)=\int_{-\infty}^\infty f_X(t)f_Y(z-t)dt \\
+&\int_0^z \lambda\exp(-\lambda t)\lambda\exp(-\lambda (z-t))dt    = \\
+&\lambda^2\exp(-\lambda z)\int_0^z dt    = \\
+&\lambda^2z\exp(-\lambda z)
+\end{aligned}
+$$
+for$z>0$.
 
 #### **Example** 
 
@@ -249,7 +296,7 @@ Let U=I(X=Y). Find f~U~ (u)
 
 #### **Example**
 
-Say X~1~ , .., X~n`  are iid U[0,1]. Let M=max\{X~1~ , .., X~n~ \}. 
+Say X~1~ , .., X~n~  are iid U[0,1]. Let M=max\{X~1~ , .., X~n~\}. 
 
 Find E[M] and Var(M).
 
@@ -261,7 +308,7 @@ Now
 
 ![](graphs/prob615.png)
 
-This is a special case of what are called *Order Statistics*. Many statistical methods, for example the median and the range, are based on an ordered data set.
+This is a special case of what are called *order statistics*. Many statistical methods, for example the median and the range, are based on an ordered data set.
 
 One of the difficulties when dealing with order statistics are ties, that is the same observation appearing more than once. This should only occur for discrete data because for continuous data the probabiltity of a tie is zero. They may happen anyway because of rounding, but we will ignore them in what follows.
 
@@ -270,14 +317,13 @@ Say X~1~, .., X~n~ are iid with density f. Then X~(i)~ is the i^th^ order statis
 
 Note X~(1)~ = min \{X~i~\} and X~(n)~ = max \{X~i~}.
 
-Let's find the pdf of X~(i)~. For this let Y be a r.v. that counts the number of $X_j \le x$ for some fixed number x. We will see
-shortly that if p=F(x) 
+Let's find the pdf of X~(i)~. For this let Y be a r.v. that counts the number of $X_j \le x$ for some fixed number x. We will see shortly that if p=F(x) 
 
 ![](graphs/prob626.png)
 
 Note also that the event $\{Y \ge i\}$ means that more than i observations are less or equal to x, so the i^th^ largest is less or equal to x. Therefore 
 
-![](graphs/prob623.png" >
+![](graphs/prob623.png)
   
 with that we find 
 

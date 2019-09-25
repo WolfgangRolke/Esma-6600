@@ -2,9 +2,9 @@
 header-includes: \usepackage{color}
                  \usepackage{float}
 output:
+  html_document: default
   pdf_document:
     fig_caption: no
-  html_document: default
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -36,12 +36,12 @@ Say X is the sum of two dice. Find E[X],  E[X^2^] and E[1/X].
   
 we have 
 
-```{r}
+```{r echo=FALSE}
 x <- 2:12
 y <- c(1:5, 6, 5:1)
 df <- data.frame(x=x, y=paste0(y, "/36"))
 colnames(df) <- c("x", "P(X=x)")
-kable.nice(df)
+kable.nice(df, do.row.names = FALSE)
 ```
 so
 $E[X] = 2\times  1/36 + 3\times 2/36+4\times 3/36+$ $5\times 4/36+6\times 5/36+7\times 6/36+8\times 5/36+9\times 4/36+$ $10\times 3/36+11\times 2/36+12\times 3/36 = 7$ 
@@ -111,9 +111,22 @@ $\mu_k  = E[X^k]$ is called the k^th^ *moment* of X.
 
 $\kappa_k   = E[(X-\mu)^k]$ is called the k^th^ *central moment* of X.
 
-$\gamma_1  = \kappa_3 /(\kappa_2 )^(3/2)$ is called the *skewness* of X.
+$\gamma_1  = \frac{\kappa_3}{\kappa_2 ^{3/2}}$ is called the *skewness* of X.
 
-$\gamma_2  = \kappa_4 /\kappa_2^2 (= \mu_4 /\sigma^4 -3)$ is called the *kurtosis* of X.
+$\gamma_2  = \frac{\kappa_4}{\kappa_2^2}-3=\frac{\kappa_4}{\sigma^4}-3$ is called the *kurtosis* of X.
+
+Some authors define the kurtosis as $\frac{\kappa_4}{\sigma^4}$ and call $\gamma_2$ the *excess kurtosis* of X.
+
+We have
+
+$$
+\begin{aligned}
+&\kappa_k    = E(X-\mu)^k =\\
+&E\left[\sum_{j=0}^k{k\choose j} X^k\mu^{k-j}\right]    = \\
+&\sum_{j=0}^k{k\choose j} EX^k\mu^{k-j}   = \\
+&\sum_{j=0}^k{k\choose j} \mu_k \mu^{k-j} 
+\end{aligned}
+$$
 
 The kurtosis of a distribution measure its "peakness", that is how sharp its maximum is. A distribution with $\gamma_2 =0$ is called *mesokurtic*. This is the case for example for a standard normal (see later), which is then a kind of baseline example. If $\gamma_2 <0$ it is called *platykurtic* and has a broader peak and thinner tails. If $\gamma_2 >0$ it is called *leptokurtic* meaning it has a sharper peak than the standard normal and heavier tails.
 
@@ -234,11 +247,12 @@ The definition of expectation easily generalizes to random vectors:
 
 say (X,Y) is a discrete random vector with joint pdf
 
-```{r}
+```{r echo=FALSE}
 df <- data.frame(x=c(0.1, 0, 0.1), y=c(0.1, 0.5, 0.2))
 dimnames(df) <- list(0:2, 1:2)
 kable.nice(df)
 ```
+
 Find E[XY]
 
 $E[XY] = 0\times 1\times 0.1 + 0\times 2\times 0.1 +$ 
@@ -269,7 +283,9 @@ What we have here is a uniform rv on the area described by $0<y<x^a<1$, shown he
 
 ![](graphs/prob448.png)
 
-So![](graphs/prob449.png)
+So
+
+![](graphs/prob449.png)
 
 ### Covariance and Correlation
 
@@ -370,7 +386,7 @@ Now the marginals of X and Y are given by
 
 f~X~ (0)=a+b, f~X~ (1)=c+d
   
-f~Y~ (0)=a+c, f~Y` (1)=b+d
+f~Y~ (0)=a+c, f~Y~ (1)=b+d
 
 so
 
@@ -386,10 +402,11 @@ and so
 
 cov(X,Y) =  
   d-(c+d)(b+d) =  
-  d-cb-cd-bd-d^2 =   
-  d-bc-(c+b)d-d^2 =  
-  d-bc-(1-a-d)d-d^2 = 
-  d-bc-d+ad+d^2-d^2 = ad-bc
+  d-cb-cd-bd-d^2^ =   
+  d-bc-(c+b)d-d^2^ =  
+  d-bc-(1-a-d)d-d^2^ =  
+  d-bc-d+ad+d^2^-d^2^ =  
+  ad-bc
   
 so X and Y are uncorrelated iff ad-bc=0
 
@@ -399,7 +416,7 @@ Of course
 
 is the determinant of this matrix.
 
-When are X and Y independent? For that we need f(x,y)=f~X~ (x)f~Y~ (y) for all x and y, so we need
+When are X and Y independent? For that we need f(x,y)=f~X~(x)f~Y~(y) for all x and y, so we need
 
 a=(a+b)(a+c)  
 b=(a+b)(b+d)  
@@ -471,15 +488,15 @@ Let V be some vector space V. A mapping <.,.>:$V^2\rightarrow \mathbb{R}$ is an 
 
 ![](graphs/prob452.png) 
 
-where the line denotes complex complement.
+where the line denotes complex conjugate.
 
 A vector space with an inner product is called an *inner product space*.
 
-Often we also write <x,x>=||x||^2^ and then ||x|| is called the *norm*. 
+Often we also write $<x,x>=||x||^2$ and then ||x|| is called the *norm*. 
 
 #### **Example**
 
-1.  R^n^ with <x,y>=$\sum x_i y_i$
+1.  R^n^ with $<x,y>= \sum x_i y_i$
 
 2.  the space of continuous functions C with 
 
@@ -487,20 +504,27 @@ $<f,g>= \int f(x)g(x)dx$
 
 Note that in an inner product space we have a version of the Pythagorean theorem: if x and y are such that  
 
-<x,y>=0  
+$<x,y>=0$  
 
 they are said to be orthogonal, and then we have  
 
-||x+y||^2 =  
-<x+y,x+y> =  
-<x,x>+<x,y>+<y,x>+<y,y> =  
-||x||^2+||y||^2
+$$
+\begin{aligned}
+&||x+y||^2    = \\
+&<x+y,x+y>    = \\
+&<x,x>+<x,y>+<y,x>+<y,y>    = \\
+&||x||^2 +||y||^2
+\end{aligned}
+$$
+
+  
+
 
 **Theorem (Cauchy-Schwartz)**
 
 say x and y are any two vectors of an inner product space, then
 
-$<x,y>^2 \le ||x||||y||$
+$<x,y> \le ||x||\times||y||$
 
 and "=" holds iff x=ay+b for some $a,b \in \mathbb{R}$.
 
@@ -508,20 +532,28 @@ The Cauchy-Schwartz inequality is one of the most important results in Mathemati
 
 #### **Example** 
 
-Let X and Y be some rv, and define  <X,Y>=E[XY]. Then <X,Y> is an inner product. Moreover if E[X]=$\mu$ and E[Y]=$\nu$ by Cauchy-Schwartz
+Let X and Y be some rv, and define  $<X,Y>=E[XY]$. Then $<X,Y>$ is an inner product. Moreover if $E[X]=\mu$ and $E[Y]=\nu$ by Cauchy-Schwartz
 
 $$
 \begin{aligned}
-&Cov(X,Y)^2 = (E[(X-\mu)(Y-\nu)])^2    = \\
-&<X-  \mu  ,Y-\nu>^2    \le   \\
+&Cov(X,Y)^2 = \\
+&(E[(X-\mu)(Y-\nu)])^2    = \\
+&\left(<X-  \mu  ,Y-\nu>\right)^2  \text{ }  \le   \\
 &<X-  \mu  ,X-  \mu  ><Y-\nu,Y-\nu>    = \\
-&E(X- \mu)^2E(Y-\nu)^2 =Var(X)Var(Y)    = \\
+&E(X- \mu)^2E(Y-\nu)^2 =\\
+&Var(X)Var(Y)    \\
 \end{aligned}
 $$
 
 and so 
 
-![](graphs/prob453.png)
+$$
+\begin{aligned}
+&\rho_{XY}^2    = Cor(X,Y)^2 \\
+&\frac{Cov(X,Y)^2}{Var(X)Var(Y)}    \le \\
+&\frac{Var(X)Var(Y)}{Var(X)Var(Y)}     = 1\\
+\end{aligned}
+$$
 
 and we have "=" iff P(aX+b=Y)=1
 
@@ -581,15 +613,15 @@ Say X|Y=y is a conditional r.v. with pdf f. Then the conditional expectation of 
 
 #### **Example** 
 
-Say (X,Y) is a discrete rv with joint pdf f(x,y)=(1-p)^2p^x, x,y in \{0,1,..\}, $y \le x$, and $0<p<1$. Find E[Y|X=x]
+Say (X,Y) is a discrete rv with joint pdf f(x,y)=(1-p)^2^p^x^, x,y in \{0,1,..\}, $y \le x$, and $0<p<1$. Find E[Y|X=x]
   
-first we need f~Y~|X=x (y|x), and for that we need f~X~ (x):
+first we need f~Y|X=x~(y|x), and for that we need f~X~(x):
 
 ![](graphs/prob441.png)
 
 so 
 
-f~Y~|X=x (y|x) = f(x,y)/f~X~ (x) = (1-p)^2p^x/((1-p)^2(x+1)p^x) = 1/(x+1)
+f~Y|X=x~(y|x) = f(x,y)/f~X~(x) = (1-p)^2^p^x^/((1-p)^2^(x+1)p^x^) = 1/(x+1)
 
 so Y|X=x has a discrete uniform distribution on \{0,1,..,x\}. 
 
@@ -601,7 +633,7 @@ Therefore
 
 Say X and Y have a joint density f(x,y)=8xy, $0  \le  x<y  \le  1$.
 
-We previously found f~Y~ (y) = 4y^3^, 0<y<1, and f~X~|Y=y (x|y) = 2x/y^2^, $0  \le  x  \le  y$. So
+We previously found f~Y~(y) = 4y^3^, $0<y<1$, and f~X|Y=y~(x|y) = 2x/y^2^, $0  \le  x  \le  y$. So
 
 ![](graphs/prob423.png)
 
@@ -615,7 +647,7 @@ g(Y)=E[X|Y=Y]=2Y/3
 
 but Y is a rv, then so is 2Y/3, and we see that we can define a rv Z=g(Y)=E[X|Y]
 
-Recall that the expression f~X~|Y  does not make sense. Now we see that on the other hand the expression E[X|Y] makes perfectly good sense!
+Recall that the expression f~X|Y~  does not make sense. Now we see that on the other hand the expression E[X|Y] makes perfectly good sense!
 
 Let's continue this example and find the conditional variance of X|Y=y: 
 
@@ -623,7 +655,7 @@ Let's continue this example and find the conditional variance of X|Y=y:
 
 and again we can consider the conditional variance of X|Y: 
 
-Var(X|Y)=Y^2^2/18 
+Var(X|Y)=Y^2^/18 
 
 #### **Example**
 
@@ -649,7 +681,7 @@ kable.nice(df)
 
 Now for the marginals we have, for example 
 
-f~X~ (0)=1/10+1/5=3/10
+f~X~(0)=1/10+1/5=3/10
 
 or in general:
 
@@ -745,7 +777,7 @@ Now
 ![](graphs/prob413.png)
 
 #### **Example** 
-say X has a density f~X~ (x) = (a+1)x^a^, $0<x<1, a>1$.  $Y|X=x \sim$ Exp(x). Find E[Y] and Var(Y).
+say X has a density f~X~(x) = (a+1)x^a^, $0<x<1, a>1$ and  $Y|X=x \sim$ Exp(x). Find E[Y] and Var(Y).
 
 To find E[Y] we first need the density of Y: 
 
@@ -759,7 +791,9 @@ But
 
 #### **Example** 
 
-Let's have another look at the example of the "device" which generates a random number Y according to an exponential distribution with rate $\lambda$ where $\lambda=x$ with probability 0.5^x^ where x=1,2,3,... We previously found that f~Y~ (y) = 2e^y^/(2e^y^-1)^2, $y \ge 0$.
+Let's have another look at the example of the "device" which generates a random number Y according to an exponential distribution with rate $\lambda$ where $\lambda=x$ with probability 0.5^x^ where x=1,2,3,... 
+
+We previously found that f~Y~(y) = 2e^y^/(2e^y^-1)^2^, $y \ge 0$.
 
 Let's find E[X|Y] 
 

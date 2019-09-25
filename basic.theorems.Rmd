@@ -1,10 +1,9 @@
 ---
-header-includes: \usepackage{color}
-                 \usepackage{float}
+header-includes: \usepackage{color} \usepackage{float}
 output:
+  html_document: default
   pdf_document:
     fig_caption: no
-  html_document: default
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -42,6 +41,7 @@ if A and B are disjoint. The extension to a finite collection of disjoint sets i
 say we have a sample space $S=\{e_1 , ..., e_n \}$ and an event $A=\{e_{k_1}  , ..., e_{k_m}\}$. Let's assume that all the events are **equally likely**. Then: 
    
 ![](graphs/prob12.png)
+
 and so  in this (very special) case finding a probability becomes a counting problem. We will discuss some formulas for this soon. 
 
 ### Set Theory
@@ -118,7 +118,7 @@ $1 = P(S) = P(A  \cup  A^c) = P(A) + P(A^c)$
 
 Let A and B be two sets such that 
 
-$A \in B$ then $P(A) \le P(B)$
+$A \subseteq B$ then $P(A) \le P(B)$
   
 **proof:** 
 $$
@@ -146,13 +146,13 @@ $P( \cup^n_{i=1} A_i )  \le   \sum^n_{i=1} P(A_i )$
 
 Let $\{A_n , n \ge 1\}$ be a sequence of events. Then
 
-a.  the sequence is called increasing if  $A_n \in A_{n+1}$ 
+a.  the sequence is called increasing if  $A_n \subseteq A_{n+1}$ 
 
 If $\{A_n , n \ge 1\}$ is an increasing sequence of events we define the new event $\lim A_n$ by
 
 $\lim A_n  = \cup_{n=1}^\infty A_n$
 
-b) the sequence is called decreasing if  $A_{n+1} \in A_n$ 
+b) the sequence is called decreasing if  $A_{n+1} \subseteq A_n$ 
 
 If $\{A_n , n \ge 1\}$ is a decreasing sequence of events we define the event $\lim A_n$ by
 
@@ -175,7 +175,8 @@ That is, $F_n$  consists of those points that were not in any earlier $A_i , i=1
 By their definition the $F_n$  are mutually exclusive, so
 
 ![](graphs/prob06.png)
-The proof for a decreasing sequence $\{A_n , n \ge$ \}$ follows directly from the fact that then $\{A^c_n, n \ge 1\}$ is an increasing sequence.
+
+The proof for a decreasing sequence $\{A_n , n \ge 1\}$ follows directly from the fact that then $\{A^c_n, n \ge 1\}$ is an increasing sequence.
 
 #### **Example** 
 Consider a population consisting of individuals able to produce offspring of the same kind. The number of individuals initially present, denoted by $X_0$, is called the size of the zero'th generation. All offspring of the zero'th generation constitute the first generation and their number is denoted by $X_1$. In general, let $X_n$  denote the size of the $n^{th}$ generation. 
